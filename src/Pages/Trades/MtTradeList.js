@@ -8,12 +8,14 @@ import Pagination from "../../Components/Pagination";
 import { PropagateLoader } from "react-spinners";
 import { Link } from 'react-router-dom';
 import DurationFilter from "../../Components/DurationFilter";
-const base_url = process.env.REACT_APP_API_URL;
-const TRADES_OPEN_API = base_url + "/v1/client/open-order";
-const TRADES_CLOSE_API = base_url + "/v1/client/close-order";
+import { CustomRequest } from '../../Components/RequestService';
+
+// const base_url = process.env.REACT_APP_API_URL;
+// const TRADES_OPEN_API = base_url + "/v1/client/open-order";
+// const TRADES_CLOSE_API = base_url + "/v1/client/close-order";
 const TBL_SHOW_RECORDS = process.env.TBL_SHOW_RECORDS == null ? 10 : process.env.TBL_SHOW_RECORDS;
 const TBL_PER_PAGE = process.env.TBL_PER_PAGE == null ? 2 : process.env.TBL_PER_PAGE;
-const MTACCOUNT_API_URL = base_url + "/v1/client/list-mtaccount";
+// const MTACCOUNT_API_URL = base_url + "/v1/client/list-mtaccount";
 
 
 const MtTradeList = () => {
@@ -91,26 +93,42 @@ const MtTradeList = () => {
     async function fetchOpenOrder() {
         setLoading(true);
         try {
-            const config = {
-                headers: { Authorization: `Bearer ${client.token}` }
-            };
+            // const config = {
+            //     headers: {Authorization: `Bearer ${client.token}`}
+            // };
 
-            const bodyParameters = data;
+            // const bodyParameters = data;
 
-            const response = await axios.post(TRADES_OPEN_API, bodyParameters, config)
+            CustomRequest('open-order', data, client.token, (res)=> {
+                if(res?.error) {
+                    console.log(res.error);
+                    if (res.error.response.status === 401) {
+                        dispatch(redirectAsync());
+                    }
+                } else {
+                    if(res.data.status_code !== 200){
+                        seTradeData([]);
+                        setLiveTradeData([]);
+                    } else {
+                        if (data.type === "demo") {
+                            seTradeData(res.data.data);
+                        } else {
+                            setLiveTradeData(res.data.data);
+                        }
+                    }
+                }
+                setLoading(false);
+            });
 
+            // const response = await axios.post(TRADES_OPEN_API, bodyParameters, config)
+            // if (data.type === "demo") {
+            //     seTradeData(response.data.data);
+            // } else {
 
-            if (data.type === "demo") {
-                seTradeData(response.data.data);
-            }
-            else {
-
-                setLiveTradeData(response.data.data);
-            }
-
-            setLoading(false);
+            //     setLiveTradeData(response.data.data);
+            // }
+            // setLoading(false);
         } catch (error) {
-            console.error(error);
             setLoading(false);
             if (error.response.status === 401) {
                 dispatch(redirectAsync());
@@ -121,40 +139,58 @@ const MtTradeList = () => {
     async function fetchCloseOrder(clr = null) {
         setLoading(true);
         try {
-            const config = {
-                headers: { Authorization: `Bearer ${client.token}` }
-            };
 
-            let formData = data;
+            CustomRequest('close-order', data, client.token, (res)=> {
+                if(res?.error) {
+                    console.log(res.error);
+                    if (res.error.response.status === 401) {
+                        dispatch(redirectAsync());
+                    }
+                } else {
+                    if(res.data.status_code !== 200){
+                        setDemoTradeCloseData([]);
+                        setLiveTradeData([]);
+                    } else {
+                        if (data.type === "demo") {
+                            setPositionTabCheck({
+                                ...positionTabCheck,
+                                demo: "Position"
+                            })
+                            setDemoTradeCloseData(res.data.data);
+                        } else {
+                            setPositionTabCheck({
+                                ...positionTabCheck,
+                                live: "Position"
+                            })
+                            setLiveTradeCloseData(res.data.data);
+                        }
+                    }
+                }
+                setLoading(false);
+            });
 
-            if (clr === "clr") {
-                formData.duration = "current_month";
-                formData.to_date = null;
-                formData.from_date = null;
-                setData((previousData) => ({
-                    ...previousData,
-                    ...formData
-                }))
-            }
+            // const config = {
+            //     headers: {Authorization: `Bearer ${client.token}`}
+            // };
 
-            const response = await axios.post(TRADES_CLOSE_API, formData, config)
+            // let formData = data;
 
-            if (response.data.data.type === "demo") {
-                setPositionTabCheck({
-                    ...positionTabCheck,
-                    demo: "Position"
-                })
-                setDemoTradeCloseData(response.data.data);
-            }
-            else {
-                setPositionTabCheck({
-                    ...positionTabCheck,
-                    live: "Position"
-                })
-                setLiveTradeCloseData(response.data.data);
-            }
-            setError({})
-            setLoading(false);
+            // const response = await axios.post(TRADES_CLOSE_API, formData, config)
+
+            // if (response.data.data.type === "demo") {
+            //     setPositionTabCheck({
+            //         ...positionTabCheck,
+            //         demo: "Position"
+            //     })
+            //     setDemoTradeCloseData(response.data.data);
+            // } else {
+            //     setPositionTabCheck({
+            //         ...positionTabCheck,
+            //         live: "Position"
+            //     })
+            //     setLiveTradeCloseData(response.data.data);
+            // }
+            // setLoading(false);
         } catch (error) {
             console.error(error);
             if (error.response.status === 400) {
@@ -244,54 +280,64 @@ const MtTradeList = () => {
     }
 
     async function fetchMTAccount() {
-        try {
-
-            console.log("calll")
-            const config = {
-                headers: { Authorization: `Bearer ${client.token}` }
-            };
-
+        // try {
             let formData = {
                 key: "value",
                 ib_client: location.state?.client_id,
             };
 
-            await axios.post(MTACCOUNT_API_URL, formData, config).then((res) => {
-                if (res.data.status_code === 200) {
-
-                    // let totalLiveAcc = 0;
-                    // res.data.data.live.map((account, i) => {
-                    //     if (account.status == 1) {
-                    //         totalLiveAcc++
-                    //     }
-                    // })
-
-                    // let liveAcc = res.data.data.live.find((data) => { return data.status == 1 });
-                    // if (totalLiveAcc === 1) {
-                    //     setData({
-                    //         ...data,
-                    //         account_id: liveAcc.id
-                    //     })
-                    // }
-                    setDemoAccountlist(res.data.data.demo);
-
-                    setLiveAccountlist(res.data.data.live);
-                }
-                else if (res.data.status_code === 500) {
-
-                }
-            }).catch((error) => {
-                if (error.response) {
-                    console.log(error.response.data.errors);
+            CustomRequest('list-mtaccount', formData, client.token, (res)=> {
+                if(res?.error) {
+                    console.log(res.error);
+                    if (res.error.response.status === 401) {
+                        dispatch(redirectAsync());
+                    }
+                } else {
+                    if(res.data.status_code !== 200){
+                        setDemoAccountlist([]);
+                        setLiveAccountlist([]);
+                    } else {
+                        setDemoAccountlist(res.data.data.demo);
+                        setLiveAccountlist(res.data.data.live);
+                    }
                 }
             });
 
-        } catch (error) {
-            console.error(error);
-            if (error.response.status === 401) {
-                dispatch(redirectAsync());
-            }
-        }
+            // await axios.post(MTACCOUNT_API_URL, formData, config).then((res) => {
+            //     if (res.data.status_code === 200) {
+
+            //         // let totalLiveAcc = 0;
+            //         // res.data.data.live.map((account, i) => {
+            //         //     if (account.status == 1) {
+            //         //         totalLiveAcc++
+            //         //     }
+            //         // })
+
+            //         // let liveAcc = res.data.data.live.find((data) => { return data.status == 1 });
+            //         // if (totalLiveAcc === 1) {
+            //         //     setData({
+            //         //         ...data,
+            //         //         account_id: liveAcc.id
+            //         //     })
+            //         // }
+            //         setDemoAccountlist(res.data.data.demo);
+
+            //         setLiveAccountlist(res.data.data.live);
+            //     } else if (res.data.status_code === 500) {
+
+            //     }
+            // }).catch((error) => {
+            //     if (error.response) {
+            //         console.log(error.response.data.errors);
+            //     }
+            // });
+
+        // } catch (error) {
+        //     console.error(error);
+        //     if (error.response.status === 401) {
+        //         dispatch(redirectAsync());
+        //     }
+        // }
     }
 
     const handleLiveType = (e) => {
@@ -347,7 +393,7 @@ const MtTradeList = () => {
         setLoading(true);
         fetchOpenOrder();
         fetchMTAccount();
-
+        
         if (client.client.verify === "Not Completed") {
             setTab('open');
             setData({
@@ -635,7 +681,7 @@ const MtTradeList = () => {
                                                                                                 return <tr>
                                                                                                     <td>{data.symbol}</td>
                                                                                                     <td>{data.entry_action}</td>
-                                                                                                    <td>{entryTime.toLocaleString('ja-JP', '').replace(/\//g, '-')}</td>
+                                                                                                    <td>{entryTime?.toLocaleString('ja-JP', '').replace(/\//g, '-')}</td>
                                                                                                     <td>{data.entry_price}</td>
                                                                                                     <td>{tradeVolumeData}</td>
                                                                                                     <td>${data.swap_charges}</td>
@@ -644,7 +690,7 @@ const MtTradeList = () => {
                                                                                                     <td>${data.stop_loss}</td>
 
                                                                                                     <td>${data.take_profit}</td>
-                                                                                                    <td>{exitTime.toLocaleString('ja-JP', '').replace(/\//g, '-')}</td>
+                                                                                                    <td>{exitTime?.toLocaleString('ja-JP', '').replace(/\//g, '-')}</td>
                                                                                                     <td>${data.exit_price}</td>
                                                                                                     <td className={data.profit < 0 ? 'text-danger' : 'text-success'}>${data.profit}</td>
                                                                                                     <td className={data.profit < 0 ? 'text-danger' : 'text-success'}>{changePer}%</td>
@@ -899,7 +945,7 @@ const MtTradeList = () => {
                                                                                             return <tr>
                                                                                                 <td>{data.symbol}</td>
                                                                                                 <td>{data.entry_action}</td>
-                                                                                                <td>{entryTime.toLocaleString('ja-JP', '').replace(/\//g, '-')}</td>
+                                                                                                <td>{entryTime?.toLocaleString('ja-JP', '').replace(/\//g, '-')}</td>
                                                                                                 <td>{data.entry_price}</td>
                                                                                                 <td>
                                                                                                     {tradeVolumeData}
@@ -909,7 +955,7 @@ const MtTradeList = () => {
                                                                                                 <td>${data.fee}</td>
                                                                                                 <td>${data.stop_loss}</td>
                                                                                                 <td>${data.take_profit}</td>
-                                                                                                <td>{exitTime.toLocaleString('ja-JP', '').replace(/\//g, '-')}</td>
+                                                                                                <td>{exitTime?.toLocaleString('ja-JP', '').replace(/\//g, '-')}</td>
                                                                                                 <td>${data.exit_price}</td>
                                                                                                 <td className={data.profit < 0 ? 'text-danger' : 'text-success'}>${data.profit}</td>
                                                                                                 <td className={data.profit < 0 ? 'text-danger' : 'text-success'}>{changePer}%</td>

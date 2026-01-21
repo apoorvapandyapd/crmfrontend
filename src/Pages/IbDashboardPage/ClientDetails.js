@@ -8,11 +8,11 @@ function ClientDetails(props) {
     // let propClientData = props.data.data.sub_clients.data;
     const [clientData, setClientData] = useState(allIbClients)
     const clientLevel = props.data.data.level;
-    // var content = Array.from({ length: clientLevel }, (_, i) => i + 1);
+    var content = Array.from({length: clientLevel}, (_, i) => i + 1);
     const [filter, setFilter] = useState({
         'search': '',
     });
-
+    
     // Refresh click handler
     const fetchDataHandler = () => {
         props.fetchData();
@@ -24,23 +24,23 @@ function ClientDetails(props) {
 
     //Call when anything changes in search textbox
     const clientChangeHandler = (e) => {
-        setFilter({ ...filter, [e.target.name]: e.target.value });
+        setFilter({...filter, [e.target.name]: e.target.value});
     }
 
     //Call the filter function according to filter state
     useEffect(() => {
         filterRecords();
-    }, [filter]);
+    },[filter]);
 
     //Filter records
     const filterRecords = () => {
         let search = filter.search;
         let selclient = filter.selclient;
         let filteredAcc = [];
-
-        if (search.trim() !== '' || selclient) {
+        
+        if(search.trim() != '' || selclient) {
             filteredAcc = allIbClients;
-            if (search.trim() !== '') {
+            if(search.trim() != '') {
                 filteredAcc = filteredAcc.filter((c) => {
                     const searchRegex = new RegExp(search, 'i');
                     let verifiedsearch = searchRegex.test(c.verified);
@@ -48,8 +48,8 @@ function ClientDetails(props) {
                     let emailsearch = searchRegex.test(c.email);
                     let phonesearch = searchRegex.test(c.phone);
                     let statussearch = searchRegex.test(c.status);
-
-                    if (first_namesearch || statussearch || emailsearch || phonesearch || verifiedsearch) {
+                    
+                    if(first_namesearch || statussearch || emailsearch || phonesearch || verifiedsearch) {
                         return c;
                     }
                 });
@@ -58,7 +58,6 @@ function ClientDetails(props) {
             filteredAcc = allIbClients;
         }
         setClientData(filteredAcc);
-
     }
     let csvdata = Array.isArray(clientData) && clientData.map(data => {
         return {
@@ -70,6 +69,7 @@ function ClientDetails(props) {
             Date: data.created
         }
     })
+
     return (
         <>
             {/*<div className="client-info row align-items-center mt-32">*/}
@@ -102,7 +102,7 @@ function ClientDetails(props) {
                 <div className="row d-flex align-items-sm-center justify-content-end">
                     <div className="col-md-6 col-lg-4 col-xl-3 ms-auto d-flex align-items-center">
                         <input type="text" className="form-control" placeholder="Search" name='search' value={filter.search} onChange={clientChangeHandler} />
-                        <Link className="ms-3" to="#" onClick={fetchDataHandler}>
+                        <Link className="ms-3" to="#" onClick={fetchDataHandler} >
                             <RefatchIcon width="24" height="24" />
                         </Link>
                         <CSVLink

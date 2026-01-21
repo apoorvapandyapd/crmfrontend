@@ -1,9 +1,8 @@
 import axios from 'axios';
 import React, { Fragment, useEffect, useState } from 'react';
-// import { Form } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useLocation } from 'react-router-dom';
-import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
+import { Link } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom/cjs/react-router-dom.min';
 import Innerlayout from '../../Components/Innerlayout';
 import { redirectAsync, showClient } from '../../store/clientslice';
 import PropagateLoader from "react-spinners/PropagateLoader";
@@ -25,7 +24,9 @@ function CreateDemo(props) {
 
     const [data, setData] = useState(null);
 
-    // const [value, setValue] = useState();
+    // const [value, setValue] = useState({
+    //     'account_type_id': 1,
+    // });
 
 
     const client = useSelector(showClient);
@@ -39,7 +40,7 @@ function CreateDemo(props) {
     const dispatch = useDispatch();
 
 
-    // var account = location.state.account;
+    var account = location.state.account;
 
     async function fetchData(){
         try {
@@ -73,7 +74,7 @@ function CreateDemo(props) {
         setLoading(true);
         
         const data = {
-            'account_type_id': 1,
+            'account_type_id': 1
         };
 
         try {
@@ -84,10 +85,11 @@ function CreateDemo(props) {
             await axios.post(CREATE_MT_ACCOUNT_API, data, config).then((res)=>{
                 if(res.data.status_code===200){
 
+
                     history.push('/list/trading-accounts');
                 }
                 else if (res.data.status_code === 500) {
-                    ;
+
                     setErrorMesssage(res.data.message);
                     setAlertDiv(true);
                 }
@@ -112,7 +114,7 @@ function CreateDemo(props) {
     },[])
 
 
-    if (data == null) {
+    if (data === null) {
         return (
             <Fragment>
                 <Innerlayout>

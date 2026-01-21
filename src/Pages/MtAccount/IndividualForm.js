@@ -35,6 +35,9 @@ function IndividualForm() {
 
     // let location = useLocation();
     const dispatch = useDispatch();
+    if (client.client.login === false) {
+        dispatch(redirectAsync());
+    }
     let signPad = useRef({});
 
     if (client.client.login === false) {
@@ -138,6 +141,7 @@ function IndividualForm() {
     });
 
     const [activeTab, setActiveTab] = useState('individual_key');
+    
     // let [selectedCountry, setSelectedCountry] = useState(null);
 
     // const tabKeys = ['individual_key', 'emp_key', 'bank_key', 'finance_key', 'trading_key', 'source_key', 'general_key', 'declaration_key'];
@@ -309,15 +313,11 @@ function IndividualForm() {
             const response = await axios.post(FETCH_INDIVIDUAL_FORM_API, bodyParameters, config)
 
             if (response.data.data != null) {
-                
 
                 let countri = (response.data.data.residence_country === '' || response.data.data.residence_country === null) ? client.client.residence_country : response.data.data.residence_country;
 
-                let selectCountrs = countries.find(country => country.label === countri);
-                // setSelectedCountry(selectCountrs.value);
-
                 let contactNumber = (response.data.data.mobile_number === '' || response.data.data.mobile_number === null) ? client.client.phone_no : response.data.data.mobile_number;
-                
+
                 setData((prevFormData) => ({
                     ...prevFormData,
                     ...response.data.data,
@@ -351,6 +351,7 @@ function IndividualForm() {
     }
 
     const phoneChange=(value, country)=>{
+        
         let finalNumber = value.replace(country.dialCode, `+${country.dialCode} `);
 
         setData((prevFormData) => ({
@@ -393,7 +394,7 @@ function IndividualForm() {
                         <div className="form-left">
                             <ul className="nav-tabs" id="myTab" role="tablist">
                                 {/* <li className="nav-item" role="presentation">
-                                    <a className='active' id="tab-1" data-bs-toggle="tab" data-bs-target="#tab-pane-1" role="tab" aria-controls="tab-pane-1" aria-selected="false"  onClick={() => handleTabClick('emp_key')}>Required Documentation</a>
+                                    <Link className='active' id="tab-1" data-bs-toggle="tab" data-bs-target="#tab-pane-1" role="tab" aria-controls="tab-pane-1" aria-selected="false"  onClick={() => handleTabClick('emp_key')}>Required Documentation</Link>
                                 </li> */}
                                 <li className="nav-item" role="presentation">
                                         <Link className={activeTab === 'individual_key' ? 'active check_class disabled' : 'check_class disabled'} id="tab-1" data-bs-toggle="tab" data-bs-target="#tab-pane-1" role="tab" aria-controls="tab-pane-1" aria-selected="false">Individual Applicant</Link>
@@ -405,13 +406,13 @@ function IndividualForm() {
                                         <Link className={activeTab === 'bank_key' ? 'active check_class disabled' : 'check_class disabled'} id="tab-3" data-bs-toggle="tab" data-bs-target="#tab-pane-3" role="tab" aria-controls="tab-pane-3" aria-selected="false">Banking Details</Link>
                                 </li>
                                 {/* <li className="nav-item" role="presentation">
-                                    <a className={activeTab=='finance_key' ? 'active check_class disabled' : 'check_class disabled'} id="tab-4" data-bs-toggle="tab" data-bs-target="#tab-pane-4" role="tab" aria-controls="tab-pane-4" aria-selected="false">Financial Details</a>
+                                    <Link className={activeTab=='finance_key' ? 'active check_class disabled' : 'check_class disabled'} id="tab-4" data-bs-toggle="tab" data-bs-target="#tab-pane-4" role="tab" aria-controls="tab-pane-4" aria-selected="false">Financial Details</Link>
                                 </li> */}
                                 <li className="nav-item" role="presentation">
                                         <Link className={activeTab === 'trading_key' ? 'active check_class disabled' : 'check_class disabled'} id="tab-5" data-bs-toggle="tab" data-bs-target="#tab-pane-5" role="tab" aria-controls="tab-pane-5" aria-selected="false">Trading Experience and Knowledge</Link>
                                 </li>
                                 {/* <li className="nav-item" role="presentation">
-                                    <a className={activeTab=='source_key' ? 'active check_class disabled' : 'check_class disabled'} id="tab-6" data-bs-toggle="tab" data-bs-target="#tab-pane-6" role="tab" aria-controls="tab-pane-6" aria-selected="false">Source of funds</a>
+                                    <Link className={activeTab=='source_key' ? 'active check_class disabled' : 'check_class disabled'} id="tab-6" data-bs-toggle="tab" data-bs-target="#tab-pane-6" role="tab" aria-controls="tab-pane-6" aria-selected="false">Source of funds</Link>
                                 </li> */}
                                 <li className="nav-item" role="presentation">
                                         <Link className={activeTab === 'general_key' ? 'active check_class disabled' : 'check_class disabled'} id="tab-7" data-bs-toggle="tab" data-bs-target="#tab-pane-7" role="tab" aria-controls="tab-pane-7" aria-selected="false">General Disclosure</Link>
@@ -420,7 +421,7 @@ function IndividualForm() {
                                         <Link className={activeTab === 'declaration_key' ? 'active check_class disabled' : 'check_class disabled'} id="tab-8" data-bs-toggle="tab" data-bs-target="#tab-pane-8" role="tab" aria-controls="tab-pane-8" aria-selected="false">Client Declarations</Link>
                                 </li>
                                 {/* <li className="nav-item" role="presentation">
-                                    <a className="" id="tab-10" data-bs-toggle="tab" data-bs-target="#tab-pane-10" role="tab" aria-controls="tab-pane-10" aria-selected="false">Annexure A</a>
+                                    <Link className="" id="tab-10" data-bs-toggle="tab" data-bs-target="#tab-pane-10" role="tab" aria-controls="tab-pane-10" aria-selected="false">Annexure A</Link>
                                 </li> */}
                             </ul>
                         </div>
@@ -435,11 +436,11 @@ function IndividualForm() {
                                             <div className="d-flex">
                                                 <div className="form-group me-3">
                                                     <input style={{ marginRight: '4px' }} type="radio" name='base_currency' id="usd" onChange={individualChange} value='USD' checked />
-                                                    <label className="mr-3" for="usd">USD</label>
+                                                    <label className="mr-3" htmlFor="usd">USD</label>
                                                 </div>
                                                 {/* <div className="form-group">
                                                     <input style={{ marginRight: '4px' }} type="radio" name='base_currency' id="eur" onChange={individualChange} value='EUR' checked={data.base_currency=="EUR"}/>
-                                                    <label className="mr-3" for="eur">EUR</label>
+                                                    <label className="mr-3" htmlFor="eur">EUR</label>
                                                 </div> */}
                                             </div>
                                             <small className="text-danger">{error.base_currency}</small>
@@ -584,9 +585,9 @@ function IndividualForm() {
                                                         <label>Are you a USA citizen, Green Card holder or USA resident for tax purpose?</label>
                                                         <div className="form-group mt-2 custom_radio">
                                                                 <input type="radio" id="usa-tax-yes" name="usa_citizen" onChange={individualChange} value='Yes' checked={data.usa_citizen === "Yes"} />
-                                                            <label for="usa-tax-yes">Yes</label>
+                                                            <label htmlFor="usa-tax-yes">Yes</label>
                                                                 <input type="radio" id="usa-tax-no" name="usa_citizen" onChange={individualChange} value='No' checked={data.usa_citizen === "No"} />
-                                                            <label for="usa-tax-no">No</label>
+                                                            <label htmlFor="usa-tax-no">No</label>
                                                         </div>
                                                     </div>
                                                     <small className="text-danger">{error.usa_citizen}</small>
@@ -596,9 +597,9 @@ function IndividualForm() {
                                                         <label>Are you a Politically Exposed Person (PEP) or related to a PEP?</label>
                                                         <div className="form-group mt-2 custom_radio">
                                                                 <input type="radio" id="pep-yes" name="pep_related" onChange={individualChange} value='Yes' checked={data.pep_related === "Yes"} />
-                                                            <label for="pep-yes">Yes</label>
+                                                            <label htmlFor="pep-yes">Yes</label>
                                                                 <input type="radio" id="pep-no" name="pep_related" onChange={individualChange} value='No' checked={data.pep_related === "No"} />
-                                                            <label for="pep-no">No</label>
+                                                            <label htmlFor="pep-no">No</label>
                                                         </div>
                                                     </div>
                                                     <small className="text-danger">{error.pep_related}</small>
@@ -613,14 +614,13 @@ function IndividualForm() {
                                                 <div className="col-sm-6 col-xl-6 col-xxl-4 mb-3">
                                                     <div className="form-group">
                                                         <label>Mobile phone number*</label>
-
                                                         <PhoneInput
                                                             inputProps={{
                                                                 name: 'phone',
                                                             }}
 
                                                             className="mb-3"
-                                                            // country={selectedCountry!=null && selectedCountry}
+                                                                // country={selectedCountry !== null && selectedCountry}
                                                             countryCodeEditable={false}
                                                             disableDropdown={true}
                                                             value={data.mobile_number}
@@ -655,15 +655,15 @@ function IndividualForm() {
                                                         <label>Employment Status*</label>
                                                         <div className="form-group mt-2 custom_radio">
                                                                 <input type="radio" id="employed" name="emp_status" onChange={individualChange} value='Employed' checked={data.emp_status === "Employed"} />
-                                                            <label for="employed">Employed</label>
+                                                            <label htmlFor="employed">Employed</label>
                                                                 <input type="radio" id="self-employed" name="emp_status" onChange={individualChange} value='Self-Employed' checked={data.emp_status === "Self-Employed"} />
-                                                            <label for="self-employed">Self-Employed</label>
+                                                            <label htmlFor="self-employed">Self-Employed</label>
                                                                 <input type="radio" id="unemployed" name="emp_status" onChange={individualChange} value='Unemployed' checked={data.emp_status === "Unemployed"} />
-                                                            <label for="unemployed">Unemployed</label>
+                                                            <label htmlFor="unemployed">Unemployed</label>
                                                                 <input type="radio" id="retired" name="emp_status" onChange={individualChange} value='Retired' checked={data.emp_status === "Retired"} />
-                                                            <label for="retired">Retired</label>
+                                                            <label htmlFor="retired">Retired</label>
                                                                 <input type="radio" id="student" name="emp_status" onChange={individualChange} value='Student' checked={data.emp_status === "Student"} />
-                                                            <label for="student">Student</label>
+                                                            <label htmlFor="student">Student</label>
                                                         </div>
                                                     </div>
                                                     <small className="text-danger">{error.emp_status}</small>
@@ -701,9 +701,9 @@ function IndividualForm() {
                                                         <label>Is your employer (or Company) regulated by FSC or any other regulator in financial markets*?</label>
                                                         <div className="form-group mt-2 custom_radio">
                                                                 <input type="radio" id="employer-yes" value='Yes' name="company_by_fsc" onChange={individualChange} checked={data.company_by_fsc === "Yes"} />
-                                                            <label for="employer-yes" >Yes</label>
+                                                            <label htmlFor="employer-yes" >Yes</label>
                                                                 <input type="radio" id="employer-no" value='No' name="company_by_fsc" onChange={individualChange} checked={data.company_by_fsc === "No"} />
-                                                            <label for="employer-no">No</label>
+                                                            <label htmlFor="employer-no">No</label>
                                                         </div>
                                                     </div>
                                                     <small className="text-danger">{error.company_by_fsc}</small>
@@ -778,13 +778,13 @@ function IndividualForm() {
                                                         <label>Investment Objective?*</label>
                                                         <div className="form-group mt-2 custom_radio">
                                                                 <input type="radio" id="hedging" name="investment_objective" onChange={individualChange} value='Hedging' checked={data.investment_objective === "Hedging"} />
-                                                            <label for="hedging">Hedging</label>
+                                                            <label htmlFor="hedging">Hedging</label>
                                                                 <input type="radio" id="trading" name="investment_objective" onChange={individualChange} value='Trading' checked={data.investment_objective === "Trading"} />
-                                                            <label for="trading">Trading</label>
+                                                            <label htmlFor="trading">Trading</label>
                                                                 <input type="radio" id="investment" name="investment_objective" onChange={individualChange} value='Investment' checked={data.investment_objective === "Investment"} />
-                                                            <label for="investment">Investment</label>
+                                                            <label htmlFor="investment">Investment</label>
                                                                 <input type="radio" id="other" name="investment_objective" onChange={individualChange} value='Others' checked={data.investment_objective === "Others"} />
-                                                            <label for="other">Others</label>
+                                                            <label htmlFor="other">Others</label>
                                                         </div>
                                                     </div>
                                                     <small className="text-danger">{error.investment_objective}</small>
@@ -816,42 +816,42 @@ function IndividualForm() {
                                                 <div className="col-12 mb-3">
                                                     <div className="form-group cd-label">
                                                         <input style={{ marginRight:'8px' }} type="checkbox" id="saving-salary" name='saving_from_salary' onChange={individualChange} checked={data.saving_from_salary} />
-                                                        <label className="mr-3" for="saving-salary"><b>Saving from Salary/Pension</b></label>
+                                                        <label className="mr-3" htmlFor="saving-salary"><b>Saving from Salary/Pension</b></label>
                                                         <small className="text-danger">{error.saving_from_salary}</small>
                                                     </div>
                                                 </div>
                                                 <div className="col-12 mb-3">
                                                     <div className="form-group cd-label">
                                                         <input style={{ marginRight:'8px' }} type="checkbox" id="p-entrepreneur" name='private_entrepreneur' onChange={individualChange} checked={data.private_entrepreneur} />
-                                                        <label className="mr-3" for="p-entrepreneur"><b>Private Entrepreneur</b></label>
+                                                        <label className="mr-3" htmlFor="p-entrepreneur"><b>Private Entrepreneur</b></label>
                                                         <small className="text-danger">{error.private_entrepreneur}</small>
                                                     </div>
                                                 </div>
                                                 <div className="col-12 mb-3">
                                                     <div className="form-group cd-label">
                                                         <input style={{ marginRight:'8px' }} type="checkbox" id="inheritance" name='inheritance' onChange={individualChange} checked={data.inheritance} />
-                                                        <label className="mr-3" for="inheritance"><b>Inheritance</b></label>
+                                                        <label className="mr-3" htmlFor="inheritance"><b>Inheritance</b></label>
                                                         <small className="text-danger">{error.inheritance}</small>
                                                     </div>
                                                 </div>
                                                 <div className="col-12 mb-3">
                                                     <div className="form-group cd-label">
                                                         <input style={{ marginRight:'8px' }} type="checkbox" id="investments" name='investments' onChange={individualChange} checked={data.investments} />
-                                                        <label className="mr-3" for="investments"><b>Investments</b></label>
+                                                        <label className="mr-3" htmlFor="investments"><b>Investments</b></label>
                                                         <small className="text-danger">{error.investments}</small>
                                                     </div>
                                                 </div>
                                                 <div className="col-12 mb-3">
                                                     <div className="form-group cd-label">
                                                         <input style={{ marginRight:'8px' }} type="checkbox" id="real-estate" name='real_estate' onChange={individualChange} checked={data.real_estate} />
-                                                        <label className="mr-3" for="real-estate"><b>Real Estate</b></label>
+                                                        <label className="mr-3" htmlFor="real-estate"><b>Real Estate</b></label>
                                                         <small className="text-danger">{error.real_estate}</small>
                                                     </div>
                                                 </div>
                                                 <div className="col-12 mb-3">
                                                     <div className="form-group cd-label">
                                                         <input style={{ marginRight:'8px' }} type="checkbox" id="royalties" name='royalties' onChange={individualChange} checked={data.royalties} />
-                                                        <label className="mr-3" for="royalties"><b>Royalties</b></label>
+                                                        <label className="mr-3" htmlFor="royalties"><b>Royalties</b></label>
                                                         <small className="text-danger">{error.royalties}</small>
                                                     </div>
                                                 </div>
@@ -860,9 +860,9 @@ function IndividualForm() {
                                                         <label>Others</label>
                                                         <div className="form-group mt-2 custom_radio">
                                                                 <input type="radio" id="others-yes" name="others" onChange={individualChange} value='Yes' checked={data.others === "Yes"} />
-                                                            <label for="others-yes">Yes</label>
+                                                            <label htmlFor="others-yes">Yes</label>
                                                                 <input type="radio" id="others-no" name="others" onChange={individualChange} value='No' checked={data.others === "No"} />
-                                                            <label for="others-no">No</label>
+                                                            <label htmlFor="others-no">No</label>
                                                         </div>
                                                         <small className="text-danger">{error.others}</small>
                                                     </div>
@@ -1013,13 +1013,13 @@ function IndividualForm() {
                                                         <label>Investment Objective?*</label>
                                                         <div className="form-group mt-2 custom_radio">
                                                                 <input type="radio" id="hedging" name="investment_objective" onChange={individualChange} value='Hedging' checked={data.investment_objective === "Hedging"} />
-                                                            <label for="hedging">Hedging</label>
+                                                            <label htmlFor="hedging">Hedging</label>
                                                                 <input type="radio" id="trading" name="investment_objective" onChange={individualChange} value='Trading' checked={data.investment_objective === "Trading"} />
-                                                            <label for="trading">Trading</label>
+                                                            <label htmlFor="trading">Trading</label>
                                                                 <input type="radio" id="investment" name="investment_objective" onChange={individualChange} value='Investment' checked={data.investment_objective === "Investment"} />
-                                                            <label for="investment">Investment</label>
+                                                            <label htmlFor="investment">Investment</label>
                                                                 <input type="radio" id="other" name="investment_objective" onChange={individualChange} value='Others' checked={data.investment_objective === "Others"} />
-                                                            <label for="other">Others</label>
+                                                            <label htmlFor="other">Others</label>
                                                         </div>
                                                     </div>
                                                     <small className="text-danger">{error.investment_objective}</small>
@@ -1061,9 +1061,9 @@ function IndividualForm() {
                                                         <label>Do you understand the risks of trading margined/leverage products?*</label>
                                                         <div className="form-group mt-2 custom_radio">
                                                                 <input type="radio" id="risk-yes" name="risk_of_trading" onChange={individualChange} value='Yes' checked={data.risk_of_trading === "Yes"} />
-                                                            <label for="risk-yes">Yes</label>
+                                                            <label htmlFor="risk-yes">Yes</label>
                                                                 <input type="radio" id="risk-no" name="risk_of_trading" onChange={individualChange} value='No' checked={data.risk_of_trading === "No"} />
-                                                            <label for="risk-no">No</label>
+                                                            <label htmlFor="risk-no">No</label>
                                                         </div>
                                                         {
                                                                 data.risk_of_trading === "No" &&
@@ -1078,13 +1078,13 @@ function IndividualForm() {
                                                         <label>How many years trading experience you have?*</label>
                                                         <div className="form-group mt-2 custom_radio">
                                                                 <input type="radio" id="securities-0" name="trading_experience" onChange={individualChange} value='Less than 1 year' checked={data.trading_experience === "Less than 1 year"} />
-                                                            <label for="securities-0">Less than 1 year</label>
+                                                            <label htmlFor="securities-0">Less than 1 year</label>
                                                                 <input type="radio" id="securities-1" name="trading_experience" onChange={individualChange} value='1 year' checked={data.trading_experience === "1 year"} />
-                                                            <label for="securities-1">1 year</label>
+                                                            <label htmlFor="securities-1">1 year</label>
                                                                 <input type="radio" id="securities-1to3" name="trading_experience" onChange={individualChange} value='1 to 3 years' checked={data.trading_experience === "1 to 3 years"} />
-                                                            <label for="securities-1to3">1 to 3 years</label>
+                                                            <label htmlFor="securities-1to3">1 to 3 years</label>
                                                                 <input type="radio" id="securities-3" name="trading_experience" onChange={individualChange} value='More than 3 years' checked={data.trading_experience === "More than 3 years"} />
-                                                            <label for="securities-3">More than 3 years</label>
+                                                            <label htmlFor="securities-3">More than 3 years</label>
                                                         </div>
                                                         <small className="text-danger">{error.trading_experience}</small>
                                                     </div>
@@ -1092,13 +1092,13 @@ function IndividualForm() {
                                                         <label>Frequency of trades?*</label>
                                                         <div className="form-group mt-2 custom_radio">
                                                                 <input type="radio" id="securities-daily" name="trading_experience_ft" onChange={individualChange} value='Daily' checked={data.trading_experience_ft === "Daily"} />
-                                                            <label for="securities-daily">Daily</label>
+                                                            <label htmlFor="securities-daily">Daily</label>
                                                                 <input type="radio" id="securities-weekly" name="trading_experience_ft" onChange={individualChange} value='Weekly' checked={data.trading_experience_ft === "Weekly"} />
-                                                            <label for="securities-weekly">Weekly</label>
+                                                            <label htmlFor="securities-weekly">Weekly</label>
                                                                 <input type="radio" id="securities-monthly" name="trading_experience_ft" onChange={individualChange} value='Monthly' checked={data.trading_experience_ft === "Monthly"} />
-                                                            <label for="securities-monthly">Monthly</label>
+                                                            <label htmlFor="securities-monthly">Monthly</label>
                                                                 <input type="radio" id="securities-yearly" name="trading_experience_ft" onChange={individualChange} value='Yearly' checked={data.trading_experience_ft === "Yearly"} />
-                                                            <label for="securities-yearly">Yearly</label>
+                                                            <label htmlFor="securities-yearly">Yearly</label>
                                                         </div>
                                                     </div>
                                                     <small className="text-danger">{error.trading_experience_ft}</small>
@@ -1109,13 +1109,13 @@ function IndividualForm() {
                                                         <label>What is your trading experience trading Derivatives?*</label>
                                                         <div className="form-group mt-2 custom_radio">
                                                                 <input type="radio" id="derivatives-0" name="trading_derivatives" onChange={individualChange} value='Less than 1 year' checked={data.trading_derivatives === "Less than 1 year"} />
-                                                            <label for="derivatives-0">Less than 1 year</label>
+                                                            <label htmlFor="derivatives-0">Less than 1 year</label>
                                                                 <input type="radio" id="derivatives-1" name="trading_derivatives" onChange={individualChange} value='1 year' checked={data.trading_derivatives === "1 year"} />
-                                                            <label for="derivatives-1">1 year</label>
+                                                            <label htmlFor="derivatives-1">1 year</label>
                                                                 <input type="radio" id="derivatives-1to3" name="trading_derivatives" onChange={individualChange} value='1 to 3 years' checked={data.trading_derivatives === "1 to 3 years"} />
-                                                            <label for="derivatives-1to3">1 to 3 years</label>
+                                                            <label htmlFor="derivatives-1to3">1 to 3 years</label>
                                                                 <input type="radio" id="derivatives-3" name="trading_derivatives" onChange={individualChange} value='More than 3 years' checked={data.trading_derivatives === "More than 3 years"} />
-                                                            <label for="derivatives-3">More than 3 years</label>
+                                                            <label htmlFor="derivatives-3">More than 3 years</label>
                                                         </div>
                                                         <small className="text-danger">{error.trading_derivatives}</small>
                                                     </div>
@@ -1123,13 +1123,13 @@ function IndividualForm() {
                                                         <label>Frequency of trades?*</label>
                                                         <div className="form-group mt-2 custom_radio">
                                                                 <input type="radio" id="derivatives-daily" name="derivatives_ft" onChange={individualChange} value='Daily' checked={data.derivatives_ft === "Daily"} />
-                                                            <label for="derivatives-daily">Daily</label>
+                                                            <label htmlFor="derivatives-daily">Daily</label>
                                                                 <input type="radio" id="derivatives-weekly" name="derivatives_ft" onChange={individualChange} value='Weekly' checked={data.derivatives_ft === "Weekly"} />
-                                                            <label for="derivatives-weekly">Weekly</label>
+                                                            <label htmlFor="derivatives-weekly">Weekly</label>
                                                                 <input type="radio" id="derivatives-monthly" name="derivatives_ft" onChange={individualChange} value='Monthly' checked={data.derivatives_ft === "Monthly"} />
-                                                            <label for="derivatives-monthly">Monthly</label>
+                                                            <label htmlFor="derivatives-monthly">Monthly</label>
                                                                 <input type="radio" id="derivatives-yearly" name="derivatives_ft" onChange={individualChange} value='Yearly' checked={data.derivatives_ft === "Yearly"} />
-                                                            <label for="derivatives-yearly">Yearly</label>
+                                                            <label htmlFor="derivatives-yearly">Yearly</label>
                                                         </div>
                                                     </div>
                                                     <small className="text-danger">{error.derivatives_ft}</small>
@@ -1140,13 +1140,13 @@ function IndividualForm() {
                                                         <label>What is your trading experience trading CFDs?*</label>
                                                         <div className="form-group mt-2 custom_radio">
                                                                 <input type="radio" id="cfds-0" name="trading_in_cfd" onChange={individualChange} value='Less than 1 year' checked={data.trading_in_cfd === "Less than 1 year"} />
-                                                            <label for="cfds-0">Less than 1 year</label>
+                                                            <label htmlFor="cfds-0">Less than 1 year</label>
                                                                 <input type="radio" id="cfds-1" name="trading_in_cfd" onChange={individualChange} value='1 year' checked={data.trading_in_cfd === "1 year"} />
-                                                            <label for="cfds-1">1 year</label>
+                                                            <label htmlFor="cfds-1">1 year</label>
                                                                 <input type="radio" id="cfds-1to3" name="trading_in_cfd" onChange={individualChange} value='1 to 3 years' checked={data.trading_in_cfd === "1 to 3 years"} />
-                                                            <label for="cfds-1to3">1 to 3 years</label>
+                                                            <label htmlFor="cfds-1to3">1 to 3 years</label>
                                                                 <input type="radio" id="cfds-3" name="trading_in_cfd" onChange={individualChange} value='More than 3 years' checked={data.trading_in_cfd === "More than 3 years"} />
-                                                            <label for="cfds-3">More than 3 years</label>
+                                                            <label htmlFor="cfds-3">More than 3 years</label>
                                                         </div>
                                                         <small className="text-danger">{error.trading_in_cfd}</small>
                                                     </div>
@@ -1154,13 +1154,13 @@ function IndividualForm() {
                                                         <label>Frequency of trades?*</label>
                                                         <div className="form-group mt-2 custom_radio">
                                                                 <input type="radio" id="cfds-daily" name="cfd_ft" onChange={individualChange} value='Daily' checked={data.cfd_ft === "Daily"} />
-                                                            <label for="cfds-daily">Daily</label>
+                                                            <label htmlFor="cfds-daily">Daily</label>
                                                                 <input type="radio" id="cfds-weekly" name="cfd_ft" onChange={individualChange} value='Weekly' checked={data.cfd_ft === "Weekly"} />
-                                                            <label for="cfds-weekly">Weekly</label>
+                                                            <label htmlFor="cfds-weekly">Weekly</label>
                                                                 <input type="radio" id="cfds-monthly" name="cfd_ft" onChange={individualChange} value='Monthly' checked={data.cfd_ft === "Monthly"} />
-                                                            <label for="cfds-monthly">Monthly</label>
+                                                            <label htmlFor="cfds-monthly">Monthly</label>
                                                                 <input type="radio" id="cfds-yearly" name="cfd_ft" onChange={individualChange} value='Yearly' checked={data.cfd_ft === "Yearly"} />
-                                                            <label for="cfds-yearly">Yearly</label>
+                                                            <label htmlFor="cfds-yearly">Yearly</label>
                                                         </div>
                                                     </div>
                                                     <small className="text-danger">{error.cfd_ft}</small>
@@ -1189,42 +1189,42 @@ function IndividualForm() {
                                                 <div className="col-12 mb-3">
                                                     <div className="form-group cd-label">
                                                         <input style={{ marginRight:'8px' }} type="checkbox" id="saving-salary" name='saving_from_salary' onChange={individualChange} checked={data.saving_from_salary} />
-                                                        <label className="mr-3" for="saving-salary"><b>Saving from Salary/Pension</b></label>
+                                                        <label className="mr-3" htmlFor="saving-salary"><b>Saving from Salary/Pension</b></label>
                                                         <small className="text-danger">{error.saving_from_salary}</small>
                                                     </div>
                                                 </div>
                                                 <div className="col-12 mb-3">
                                                     <div className="form-group cd-label">
                                                         <input style={{ marginRight:'8px' }} type="checkbox" id="p-entrepreneur" name='private_entrepreneur' onChange={individualChange} checked={data.private_entrepreneur} />
-                                                        <label className="mr-3" for="p-entrepreneur"><b>Private Entrepreneur</b></label>
+                                                        <label className="mr-3" htmlFor="p-entrepreneur"><b>Private Entrepreneur</b></label>
                                                         <small className="text-danger">{error.private_entrepreneur}</small>
                                                     </div>
                                                 </div>
                                                 <div className="col-12 mb-3">
                                                     <div className="form-group cd-label">
                                                         <input style={{ marginRight:'8px' }} type="checkbox" id="inheritance" name='inheritance' onChange={individualChange} checked={data.inheritance} />
-                                                        <label className="mr-3" for="inheritance"><b>Inheritance</b></label>
+                                                        <label className="mr-3" htmlFor="inheritance"><b>Inheritance</b></label>
                                                         <small className="text-danger">{error.inheritance}</small>
                                                     </div>
                                                 </div>
                                                 <div className="col-12 mb-3">
                                                     <div className="form-group cd-label">
                                                         <input style={{ marginRight:'8px' }} type="checkbox" id="investments" name='investments' onChange={individualChange} checked={data.investments} />
-                                                        <label className="mr-3" for="investments"><b>Investments</b></label>
+                                                        <label className="mr-3" htmlFor="investments"><b>Investments</b></label>
                                                         <small className="text-danger">{error.investments}</small>
                                                     </div>
                                                 </div>
                                                 <div className="col-12 mb-3">
                                                     <div className="form-group cd-label">
                                                         <input style={{ marginRight:'8px' }} type="checkbox" id="real-estate" name='real_estate' onChange={individualChange} checked={data.real_estate} />
-                                                        <label className="mr-3" for="real-estate"><b>Real Estate</b></label>
+                                                        <label className="mr-3" htmlFor="real-estate"><b>Real Estate</b></label>
                                                         <small className="text-danger">{error.real_estate}</small>
                                                     </div>
                                                 </div>
                                                 <div className="col-12 mb-3">
                                                     <div className="form-group cd-label">
                                                         <input style={{ marginRight:'8px' }} type="checkbox" id="royalties" name='royalties' onChange={individualChange} checked={data.royalties} />
-                                                        <label className="mr-3" for="royalties"><b>Royalties</b></label>
+                                                        <label className="mr-3" htmlFor="royalties"><b>Royalties</b></label>
                                                         <small className="text-danger">{error.royalties}</small>
                                                     </div>
                                                 </div>
@@ -1233,9 +1233,9 @@ function IndividualForm() {
                                                         <label>Others</label>
                                                         <div className="form-group mt-2 custom_radio">
                                                                 <input type="radio" id="others-yes" name="others" onChange={individualChange} value='Yes' checked={data.others === "Yes"} />
-                                                            <label for="others-yes">Yes</label>
+                                                            <label htmlFor="others-yes">Yes</label>
                                                                 <input type="radio" id="others-no" name="others" onChange={individualChange} value='No' checked={data.others === "No"} />
-                                                            <label for="others-no">No</label>
+                                                            <label htmlFor="others-no">No</label>
                                                         </div>
                                                         <small className="text-danger">{error.others}</small>
                                                     </div>
@@ -1276,9 +1276,9 @@ function IndividualForm() {
                                                         <label>Do you have any pending litigation, disputed account(s) or any other unresolved matter with any other broker and/or company or have been sanctioned by any regulatory authority within the financial services industry?</label>
                                                         <div className="form-group mt-2 custom_radio">
                                                                 <input type="radio" id="general-disclosure-1-yes" name="legal_status_clear" onChange={individualChange} value='Yes' checked={data.legal_status_clear === "Yes"} />
-                                                            <label for="general-disclosure-1-yes">Yes</label>
+                                                            <label htmlFor="general-disclosure-1-yes">Yes</label>
                                                                 <input type="radio" id="general-disclosure-1-no" name="legal_status_clear" onChange={individualChange} value='No' checked={data.legal_status_clear === "No"} />
-                                                            <label for="general-disclosure-1-no">No</label>
+                                                            <label htmlFor="general-disclosure-1-no">No</label>
                                                         </div>
                                                         <small className="text-danger">{error.legal_status_clear}</small>
                                                     </div>
@@ -1296,9 +1296,9 @@ function IndividualForm() {
                                                         <label>Do you intend to provide power of attorney of this trading account to other any person/persons?</label>
                                                         <div className="form-group mt-2 custom_radio">
                                                                 <input type="radio" id="general-disclosure-2-yes" name="poa_intent" onChange={individualChange} value='Yes' checked={data.poa_intent === "Yes"} />
-                                                            <label for="general-disclosure-2-yes">Yes</label>
+                                                            <label htmlFor="general-disclosure-2-yes">Yes</label>
                                                                 <input type="radio" id="general-disclosure-2-no" name="poa_intent" onChange={individualChange} value='No' checked={data.poa_intent === "No"} />
-                                                            <label for="general-disclosure-2-no">No</label>
+                                                            <label htmlFor="general-disclosure-2-no">No</label>
                                                         </div>
                                                         <small className="text-danger">{error.poa_intent}</small>
                                                     </div>
@@ -1316,9 +1316,9 @@ function IndividualForm() {
                                                         <label>You/have you during the past 5 years been a partner, director, officer or employee of any broker, or any other company within the financial services industry, or the same of any exchange, board of trade, contract market or clearing organisation?</label>
                                                         <div className="form-group mt-2 custom_radio">
                                                                 <input type="radio" id="general-disclosure-3-yes" name="financial_industry_affiliation" onChange={individualChange} value='Yes' checked={data.financial_industry_affiliation === "Yes"} />
-                                                            <label for="general-disclosure-3-yes">Yes</label>
+                                                            <label htmlFor="general-disclosure-3-yes">Yes</label>
                                                                 <input type="radio" id="general-disclosure-3-no" name="financial_industry_affiliation" onChange={individualChange} value='No' checked={data.financial_industry_affiliation === "No"} />
-                                                            <label for="general-disclosure-3-no">No</label>
+                                                            <label htmlFor="general-disclosure-3-no">No</label>
                                                         </div>
                                                         <small className="text-danger">{error.financial_industry_affiliation}</small>
                                                     </div>
@@ -1336,9 +1336,9 @@ function IndividualForm() {
                                                         <label>Have you at any time been convicted of any offence by any court? (Road Traffic offences should not be listed).</label>
                                                         <div className="form-group mt-2 custom_radio">
                                                                 <input type="radio" id="general-disclosure-4-yes" name="criminal_convictions" onChange={individualChange} value='Yes' checked={data.criminal_convictions === "Yes"} />
-                                                            <label for="general-disclosure-4-yes">Yes</label>
+                                                            <label htmlFor="general-disclosure-4-yes">Yes</label>
                                                                 <input type="radio" id="general-disclosure-4-no" name="criminal_convictions" onChange={individualChange} value='No' checked={data.criminal_convictions === "No"} />
-                                                            <label for="general-disclosure-4-no">No</label>
+                                                            <label htmlFor="general-disclosure-4-no">No</label>
                                                         </div>
                                                         <small className="text-danger">{error.criminal_convictions}</small>
                                                     </div>
@@ -1356,9 +1356,9 @@ function IndividualForm() {
                                                         <label>Does any third party have any controlling interest where financial or otherwise, in respect of any trading undertaken on this account?</label>
                                                         <div className="form-group mt-2 custom_radio">
                                                                 <input type="radio" id="general-disclosure-5-yes" name="external_control" onChange={individualChange} value='Yes' checked={data.external_control === "Yes"} />
-                                                            <label for="general-disclosure-5-yes">Yes</label>
+                                                            <label htmlFor="general-disclosure-5-yes">Yes</label>
                                                                 <input type="radio" id="general-disclosure-5-no" name="external_control" onChange={individualChange} value='No' checked={data.external_control === "No"} />
-                                                            <label for="general-disclosure-5-no">No</label>
+                                                            <label htmlFor="general-disclosure-5-no">No</label>
                                                         </div>
                                                         <small className="text-danger">{error.external_control}</small>
                                                     </div>
@@ -1403,7 +1403,7 @@ function IndividualForm() {
                                                 <div className="col-12">
                                                     <div className="form-group cd-label">
                                                         <input style={{ marginRight: '8px' }} type="checkbox" id="declare" name='disclosure_details' onChange={individualChange} checked={data.disclosure_details} required/>
-                                                        <label className="mr-3" for="declare"><b>I declare that:</b></label>
+                                                        <label className="mr-3" htmlFor="declare"><b>I declare that:</b></label>
                                                     </div>
                                                     <small className="text-danger">{error.disclosure_details}</small>
                                                     <ul className="number-style">
@@ -1417,7 +1417,7 @@ function IndividualForm() {
                                                 <div className="col-12">
                                                     <div className="form-group cd-label">
                                                         <input style={{ marginRight: '8px' }} type="checkbox" id="personal-information" name='client_declarations' onChange={individualChange} checked={data.client_declarations} required/>
-                                                        <label className="mr-3" for="personal-information"><b>I acknowledge and consent to personal information submitted by me to PM Financials Ltd:</b></label>
+                                                        <label className="mr-3" htmlFor="personal-information"><b>I acknowledge and consent to personal information submitted by me to PM Financials Ltd:</b></label>
                                                     </div>
                                                     <small className="text-danger">{error.client_declarations}</small>
                                                     <ul className="number-style">
@@ -1431,7 +1431,7 @@ function IndividualForm() {
                                                 <div className="col-12">
                                                     <div className="form-group cd-label">
                                                         <input style={{ marginRight: '8px' }} type="checkbox" id="signature" name='consent_personal_information' onChange={individualChange} checked={data.consent_personal_information} required/>
-                                                        <label className="mr-3" for="signature"><b>I declare by our signature:</b></label>
+                                                        <label className="mr-3" htmlFor="signature"><b>I declare by our signature:</b></label>
                                                     </div>
                                                     <small className="text-danger">{error.consent_personal_information}</small>
                                                     <ul className="number-style">
@@ -1439,7 +1439,7 @@ function IndividualForm() {
                                                                 <br />(a) <a href='https://pmfinancials.mu/pdf/PMFL-Terms_and_conditions.pdf' target='_blank' className='link-text' rel="noreferrer">Client Agreement </a>
                                                                 <br />(b) <a href='https://pmfinancials.mu/pdf/Privacy%20_Policy.pdf' target='_blank' rel="noreferrer" className='link-text'>Privacy Policy</a>
                                                         {/* <br/>(c) Best Execution Policy 
-                                                        <br/>(d) Regulations for Non-Trading Operations  */}
+                                                        <br/>(d) Regulations htmlFor Non-Trading Operations  */}
                                                                 <br />(c) <a href='https://pmfinancials.mu/pdf/Complaints_Policy.pdf' target='_blank' rel="noreferrer" className='link-text'>Complaint Policy </a>
                                                                 <br />(d) <a href='https://pmfinancials.mu/pdf/Risk_Disclosure.pdf' target='_blank' rel="noreferrer" className='link-text'>Risk Disclosure Policy</a>
                                                         <br/>(e) (as amended from time to time) that may apply to our entire trading relationship with PM Financials Ltd;</li>

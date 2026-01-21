@@ -1,14 +1,15 @@
-import axios from 'axios';
+// import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { PropagateLoader } from 'react-spinners';
 import {redirectAsync, showClient} from '../../store/clientslice';
 import { useDispatch, useSelector } from 'react-redux';
 import { formatNumberWithCommas, getUniqueList } from '../../Components/util';
 import { Link } from 'react-router-dom';
-import { CsvDownloadIcon, RefatchIcon } from '../../Components/icons';
 import { CSVLink } from "react-csv";
+import { CsvDownloadIcon, RefatchIcon } from '../../Components/icons';
+import { CustomRequest } from '../../Components/RequestService';
 let allIbWithdraw = [];
-const DASHBOARD_API_URL = process.env.REACT_APP_API_URL + "/v1/ib/getallibwithdraw";
+// const DASHBOARD_API_URL = process.env.REACT_APP_API_URL + "/v1/ib/getallibwithdraw";
 
 function IbAllClientWithdraw() {
     const dispatch = useDispatch();
@@ -21,35 +22,24 @@ function IbAllClientWithdraw() {
     const client = useSelector(showClient);
     async function fetchAllWithdraw() {
         setIbWithdraw(null);
-        try {
-            const config = {
-                headers: {Authorization: `Bearer ${client.token}`}
-            };
-
-            const bodyParameters = {
-                key: "value"
-            };
-            await axios.post(DASHBOARD_API_URL, bodyParameters, config).then((res) => {
+        let data = {
+            key: "value"
+        };
+        CustomRequest('getallibwithdraw', data, client.token, (res) => {
+            if (res?.error) {
+                if (res.error.response.status === 401) {
+                    dispatch(redirectAsync());
+                }
+            } else {
                 if (res.data.status_code === 200) {
                     allIbWithdraw = res.data.data.accounts;
                     setIbWithdraw(res.data.data.accounts);
                     let cArr = getUniqueList(allIbWithdraw);
                     setClientsArr(cArr);
-                    setFilter({search:'', selclient:''});
-                } else if (res.data.status_code === 500) {
-
+                    setFilter({ search: '', selclient: '' });
                 }
-            }).catch((error) => {
-                if (error.response) {
-
-                }
-            });
-        } catch (error) {
-            
-            if (error.response.status === 401) {
-                dispatch(redirectAsync());
             }
-        }
+        });
     }
 
     const clientChangeHandler = (e) => {
@@ -96,7 +86,7 @@ function IbAllClientWithdraw() {
         return {
             "Name": `${data.first_name} ${data.last_name}`,
             "Transaction ID": data.transaction_id ?? '-',
-            Amount: data.amount.toLocaleString("en-US", { style: 'currency', currency: 'USD' }),
+            Amount: data.amount?.toLocaleString("en-US", { style: 'currency', currency: 'USD' }),
             Status: data.status,
             Date: data.date
         }
@@ -152,7 +142,7 @@ function IbAllClientWithdraw() {
                     <table className="table m-0">
                         <thead>
                         <tr>
-                                            <th scope="col">Name</th>
+                            <th scope="col">Client Name</th>
                             <th scope="col">Transaction ID</th>
                             <th scope="col">Amount</th>
                             <th scope="col">Status</th>

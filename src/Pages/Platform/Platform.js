@@ -24,17 +24,17 @@ function Platform() {
                             <div className='box p-4 text-center'>
                                 <h3>Android App</h3>
                                 <p>This Android app connects users to brokers, offering real-time market data, advanced chart analysis, and seamless trading experiences.</p>
-                                <a download href='https://download.mql5.com/cdn/mobile/mt5/android?server=PMFinancials-Server' className='btn btn-primary '>Download</a>
+                                <a download href='https://download.mql5.com/cdn/mobile/mt5/android?server=ParkMoney-Demo,ParkMoney-Server' className='btn btn-primary '>Download</a>
                             </div>
                             <div className='box p-4 text-center'>
                                 <h3>IOS App</h3>
                                 <p>This app links you to brokers for real-time market data, chart analysis, and trading, enhancing your financial decision-making.</p>
-                                <a download href='https://download.mql5.com/cdn/mobile/mt5/ios?server=PMFinancials-Server' className='btn btn-primary '>Download</a>
+                                <a download href='https://download.mql5.com/cdn/mobile/mt5/ios?server=ParkMoney-Demo,ParkMoney-Server' className='btn btn-primary '>Download</a>
                             </div>
                             <div className='box p-4 text-center'>
                                 <h3>Windows PC</h3>
                                 <p>This desktop application provides direct access to broker servers, offering real-time market data, advanced chart analysis, and smooth trading functionalities.</p>
-                                <a download href='https://download.mql5.com/cdn/web/pm.financials.ltd/mt5/pmfinancials5setup.exe' className='btn btn-primary '>Download</a>
+                                <a download href='https://download.mql5.com/cdn/web/park.money.limited/mt5/parkmoney5setup.exe' className='btn btn-primary '>Download</a>
                             </div>
                             {/* <div className='box p-4 text-center'>
                                 <h3>Android App</h3>

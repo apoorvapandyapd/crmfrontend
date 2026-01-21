@@ -13,11 +13,12 @@ import Declarations from "./Declarations";
 import { showClient } from '../../store/clientslice';
 import { Link, useHistory } from 'react-router-dom';
 import { useSelector } from "react-redux";
-import axios from "axios";
+import { CustomRequest } from "../../Components/RequestService";
+// import axios from "axios";
 
-const base_url = process.env.REACT_APP_API_URL;
-const STORE_CORPORATE_FORM_API = base_url+"/v1/client/store-corporateform";
-const GET_CORPORATE_FORM_API = base_url+"/v1/client/get-corporatedata";
+// const base_url = process.env.REACT_APP_API_URL;
+// const STORE_CORPORATE_FORM_API = base_url+"/v1/client/store-corporateform";
+// const GET_CORPORATE_FORM_API = base_url+"/v1/client/get-corporatedata";
 
 const Tabcontent = () => {
 
@@ -246,15 +247,15 @@ const Tabcontent = () => {
         history.push('/dashboard');
     }
 
-    async function fetchData(){
-        try {
-            const config = {
-                headers: { Authorization: `Bearer ${client.token}` }
-            };
-            setDisableSaveBtn(true);
-            await axios.post(GET_CORPORATE_FORM_API, {}, config).then((res)=>{
-                if(res.data.status_code===200){
+    async function fetchData() {
 
+        setDisableSaveBtn(true);
+
+        CustomRequest('get-corporatedata', data, client.token, (res) => {
+            if (res?.error) {
+                setError(res?.error?.response.data.errors);
+            } else {
+                if (res.data.status_code === 200) {
                     // setData(...data,...res.data.data);
                     setData((prevFormData) => ({
                         ...prevFormData,
@@ -264,19 +265,11 @@ const Tabcontent = () => {
                     setDirectorData([...res.data.data.sole]);
                     setShareholderData([...res.data.data.ubo]);
                     setDisableSaveBtn(false);
-                    
+
                 }
-                else if (res.data.status_code === 500) {
-                }
-            }).catch((error) => {
-                if (error.response) {
-                    console.log(error.response.data.errors);
-                    setError(error.response.data.errors);
-                }
-            });
-        } catch (error) {
-            console.error(error);
-        }
+            }
+        });
+
     }
 
     useEffect(() => {
@@ -661,40 +654,29 @@ const Tabcontent = () => {
 
         await new Promise((resolve) => setTimeout(resolve, 0));
 
-        try {
-            const config = {
-                headers: { Authorization: `Bearer ${client.token}` }
-            };
-    
-            await axios.post(STORE_CORPORATE_FORM_API, final_data, config).then((res)=>{
-                if(res.data.status_code===200){
 
+        CustomRequest('store-corporateform', final_data, client.token, (res) => {
+            if (res?.error) {
+                console.log(res.error);
+                setError(res?.error?.response.data.errors);
+                setLoading(false)
+            } else {
+                if (res.data.status_code === 200) {
                     setError({});
                     setState(res.data.data);
-
                     if (res.data.data === 'Completed') {
                         setLoading(false)
                         history.push('/dashboard')
                     }
-                    
+
                 }
-                else if (res.data.status_code === 500) {
-                    ;
-                }
-            }).catch((error) => {
-                if (error.response) {
-                    console.log(error.response.data.errors);
-                    setError(error.response.data.errors);
-                    setLoading(false)
-                }
-            });
-        } catch (error) {
-            console.error(error);
-        }
+            }
+        });
 
     }
     // alert(currentTab);
     // alert(state);
+
 
 
     if (loading) {

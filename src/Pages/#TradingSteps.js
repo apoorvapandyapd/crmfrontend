@@ -33,11 +33,10 @@ function TradingSteps() {
                 if(res.data.status_code===200){
                     setDemoData(res.data.data.demo);
                     setLiveData(res.data.data.live);
-
                 }
             })
         } catch (error) {
-            console.error(error);
+            
             if(error.response.status==401){
                 dispatch(redirectAsync());
             }
@@ -48,8 +47,7 @@ function TradingSteps() {
         fetchData();
     },[])
 
-    const accordionSetItem = (value) => {
-        
+    const accordionSetItem = (value) =>{
     }
 
     if (demoData === null && liveData === null) {

@@ -55,7 +55,7 @@ const Transfer = () => {
             }
 
         } catch (error) {
-            console.error(error);
+            
             if (error.response.status === 400) {
                 setError(error.response.data.errors);
                 setLoading(false);
@@ -68,6 +68,7 @@ const Transfer = () => {
     useEffect(() => {
         fetchData();
     }, [])
+
 
 
     if (transfer === null) {

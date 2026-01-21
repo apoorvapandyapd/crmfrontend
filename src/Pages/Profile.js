@@ -14,7 +14,7 @@ const Profile = () => {
         history.push('/login')
     }
 
-    // const noimg = process.env.PUBLIC_URL+"/Images/profile-photo.png";
+    const noimg = process.env.PUBLIC_URL+"/Images/profile-photo.png";
     const options = {
         year: 'numeric',
         month: 'long',
@@ -77,14 +77,14 @@ const Profile = () => {
                                         <input type="file" name="" onChange={handleProfilePhoto} />
                                         {
                                             (submitText === 'Save') ? 
-                                                <button type="submit" className="btn btn-primary btn-sm">Change Photo</button> :
-                                                <button type="button" className="btn btn-primary btn-sm">{submitText}</button>
+                                            <button type="submit" className="btn btn-primary btn-sm">Change Photo</button> : 
+                                            <button type="button" className="btn btn-primary btn-sm">{submitText}</button>
                                         }
                                     </div>
                                     <div className="form-group">
                                     {
                                             (submitText === 'Save') ? 
-                                                <button type="submit" className="btn btn-primary btn-sm mt-2">{submitText}</button> : null 
+                                        <button type="submit" className="btn btn-primary btn-sm mt-2">{submitText}</button> : null 
                                     }
                                     </div>
                                 </form>
@@ -98,7 +98,7 @@ const Profile = () => {
                                     <li>Phone Number <span>{client.client.phone_no}</span></li>
                                     <li>Email <span>{client.client.email}</span></li>
                                     <li>Gender <span>{client.client.gender}</span></li>
-                                    <li>Date Of Birth <span>{(client.client.dob != null) ? new Date(client.client.dob).toLocaleString("en-US", options) : '-'}</span></li>
+                                    <li>Date Of Birth <span>{(client.client.dob!==null) ? new Date(client.client.dob).toLocaleString("en-US",options) : '-'}</span></li>
                                     <li>Registered As <span>{getRole()}</span></li>
                                     <li>Location <span>{client.client.city}, {client.client.country}</span></li>
                                 </ul>

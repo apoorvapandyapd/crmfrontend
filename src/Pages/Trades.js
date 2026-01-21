@@ -11,7 +11,4 @@ const Trades = () => {
         </Fragment>
     );
 }
-
-
-
 export default Trades;

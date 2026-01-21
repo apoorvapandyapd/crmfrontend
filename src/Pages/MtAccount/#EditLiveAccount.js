@@ -252,7 +252,7 @@ function EditLiveAccount(props) {
                                     data!=null && data.map(val=>(
                                         <div className="form-group col-6 col-sm-4">
                                             <FormControl type="radio" name="radio-group" id={val.id} onChange={(e)=>selectPlanFunc(e,val.id)} checked={selectedPlanData.account_plan_id==val.id} />
-                                            <label for={val.id}>
+                                            <label htmlFor={val.id}>
                                                 <h3 className="mb-1">{val.title}</h3>
                                                 <p className="mb-1"><b>Group......</b>{val.group}</p>
                                                 <p className="mb-1">{val.group_description}</p>

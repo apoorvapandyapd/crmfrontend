@@ -12,8 +12,8 @@ import DurationFilter from "../../Components/DurationFilter";
 const base_url = process.env.REACT_APP_API_URL;
 const DELETE_WITHDRAW_REQUEST_API = base_url + "/v1/client/delete-withdrawrequest";
 const WITHDRAW_API_URL = base_url + "/v1/client/list-withdraws";
-const TBL_SHOW_RECORDS = process.env.TBL_SHOW_RECORDS==null ? 10 : process.env.TBL_SHOW_RECORDS;
-const TBL_PER_PAGE = process.env.TBL_PER_PAGE==null ? 2 : process.env.TBL_PER_PAGE;
+const TBL_SHOW_RECORDS = process.env.TBL_SHOW_RECORDS == null ? 10 : process.env.TBL_SHOW_RECORDS;
+const TBL_PER_PAGE = process.env.TBL_PER_PAGE == null ? 2 : process.env.TBL_PER_PAGE;
 
 const Withdrawtable = (props) => {
 
@@ -30,7 +30,7 @@ const Withdrawtable = (props) => {
     const client = useSelector(showClient);
     const dispatch = useDispatch();
 
-    const deleteRequest=async(e,id)=>{
+    const deleteRequest = async (e, id) => {
         e.preventDefault();
         // var targets = e.currentTarget;
         await Swal.fire({
@@ -45,45 +45,45 @@ const Withdrawtable = (props) => {
                 cancelButton: 'cancel-button',
                 confirmButton: 'submit-button confirm',
             },
-          })
-          .then((willDelete) => {
-            if (willDelete.isConfirmed){
+        })
+            .then((willDelete) => {
+                if (willDelete.isConfirmed) {
 
-                let formData = new FormData();
-                formData.append("id",id);
+                    let formData = new FormData();
+                    formData.append("id", id);
 
-                try {
-                    const config = {
-                        headers: { Authorization: `Bearer ${client.token}` }
-                    };
+                    try {
+                        const config = {
+                            headers: { Authorization: `Bearer ${client.token}` }
+                        };
 
-                     axios.post(DELETE_WITHDRAW_REQUEST_API, formData, config).then((res)=>{
-                        if(res.data.status_code===200){
-                            fetchData();
-                            Swal.fire("","Record deleted successfully!","success");
-                        } else if (res.data.status_code === 500) {
-                            Swal.fire({
-                                icon: 'error',
-                                text: res.data.message,
-                                confirmButtonText: 'OK',
-                            });
-                            fetchData();
-                            props.refetchWalletBalanceData();
+                        axios.post(DELETE_WITHDRAW_REQUEST_API, formData, config).then((res) => {
+                            if (res.data.status_code === 200) {
+                                fetchData();
+                                Swal.fire("", "Record deleted successfully!", "success");
+                            } else if (res.data.status_code === 500) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    text: res.data.message,
+                                    confirmButtonText: 'OK',
+                                });
+                                fetchData();
+                                props.refetchWalletBalanceData();
+                            }
+
+                        }).catch((error) => {
+                            if (error.response) {
+                                console.log(error.response.data.errors);
+                            }
+                        });
+                    } catch (error) {
+                        console.error(error);
+                        if (error.response.status === 401) {
+                            dispatch(redirectAsync());
                         }
-
-                    }).catch((error) => {
-                        if (error.response) {
-                            console.log(error.response.data.errors);
-                        }
-                    });
-                } catch (error) {
-                    console.error(error);
-                    if (error.response.status === 401) {
-                        dispatch(redirectAsync());
                     }
                 }
-            }
-        });
+            });
     }
 
     const [currentPage, setCurrentPage] = useState(1);
@@ -144,7 +144,7 @@ const Withdrawtable = (props) => {
         setPageNumberLimit(TBL_PER_PAGE);
         setMaxPageNumberLimit(TBL_PER_PAGE);
         setMinPageNumberLimit(0);
-    } 
+    }
 
 
 
@@ -261,13 +261,12 @@ const Withdrawtable = (props) => {
             "Record ID": data.id,
             "Transaction ID": data.transaction_id ?? '-',
             "Payment Method": data.payment_method,
-            Amount: data.amount.toLocaleString("en-US", { style: 'currency', currency: 'USD' }),
+            Amount: data.amount?.toLocaleString("en-US", { style: 'currency', currency: 'USD' }),
             Status: data.status,
             Comment: data.comment != null ? data.comment : "-",
             Date: data.created_at
         }
     })
-
 
     return (
         <Fragment>
@@ -281,10 +280,10 @@ const Withdrawtable = (props) => {
                     data-testid="loader"
                 /> : <>
                         <div className={`table-last-col ${location.pathname === "/mywallet" && 'card-body'}`}>
-                            {props.showList === 'all' && 
-                            <div className="title d-flex justify-content-between flex-wrap">
+                            {props.showList === 'all' &&
+                                <div className="title d-flex justify-content-between flex-wrap">
                                 <h3>Pending Withdrawals</h3>
-                                <div className="mb-3 mb-md-0">Total Amount: <span className="text-danger">  {totalStatusAmt && ` $${totalStatusAmt?.pendingStatus.amount.toFixed(2)}  (${totalStatusAmt?.pendingStatus.count}) `}</span>
+                                    <div className="mb-3 mb-md-0">Total Amount: <span className="text-danger">  {totalStatusAmt && ` $${totalStatusAmt?.pendingStatus.amount.toFixed(2)}  (${totalStatusAmt?.pendingStatus.count}) `}</span>
                                 </div>
                             </div>}
                             {(props.showList === 'withdrawal' || props.showList === "withdrawalRequest") &&
@@ -319,29 +318,29 @@ const Withdrawtable = (props) => {
                                 }
 
                                 <DurationFilter filterData={filterData} search={searchByDate} clear={clearDate} handleFilterDataChanger={handleFilterDataChanger} handleDurationChanger={handleDurationChanger} csvdata={csvdata} csvName={location.state?.client_name ? location.state?.client_name.replace(/ /g, "_") + "_withdrawal" : "withdrawals"} />
-                                <div className='d-flex flex-wrap'>
-                                    <small className="text-danger m-1">{error['from_date']}</small>
-                                    <small className="text-danger m-1">{error['to_date']}</small>
-                                </div>
-                            </>
+                                    <div className='d-flex flex-wrap'>
+                                        <small className="text-danger m-1">{error['from_date']}</small>
+                                        <small className="text-danger m-1">{error['to_date']}</small>
+                                    </div>
+                                </>
                             }
                             <div className="table-responsive">
-                        <Table className="table m-0 align-middle">
-                            <thead>
-                                <tr>
+                                <Table className="table m-0 align-middle">
+                                    <thead>
+                                        <tr>
                                             <th scope="col" >Record ID</th>
-                                    <th scope="col">Transaction ID</th>
-                                    <th scope="col">Payment Method</th>
-                                    {/* <th scope="col">Destination</th> */}
-                                    <th scope="col">Amount</th>
-                                    <th scope="col">Status</th>
-                                    <th scope="col">Comment</th>
+                                            <th scope="col">Transaction ID</th>
+                                            <th scope="col">Payment Method</th>
+                                            {/* <th scope="col">Destination</th> */}
+                                            <th scope="col">Amount</th>
+                                            <th scope="col">Status</th>
+                                            <th scope="col">Comment</th>
                                             <th scpoe='col'>Date</th>
                                             {location.pathname === "/mywallet" && <th scope="col">Action</th>}
 
-                                </tr>
-                            </thead>
-                            <tbody>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
                                         {Array.isArray(currentRecords) && currentRecords.length <= 0 && <tr><td colSpan="8">No records found</td></tr>}
                                         {Array.isArray(currentRecords) && currentRecords.map((withdraw, i) =>
                                             <tr>
@@ -353,35 +352,35 @@ const Withdrawtable = (props) => {
                                                 <td>{withdraw.status}</td>
                                                 <td>{withdraw.comment != null ? withdraw.comment : '-'}</td>
                                                 <td>{withdraw.created_at}</td>
-                                                {location.pathname === "/mywallet" && 
-                                                    <td>
-                                                        {
-                                                            withdraw.status === 'Pending' ?
-                                                                <OverlayTrigger placement="top" overlay={<Tooltip>Delete</Tooltip>}>
-                                                                    <Link to='#' onClick={(e) => deleteRequest(e, withdraw.id)} className="delete-ticket-icon">
-                                                                        <DeleteIcon width="18" height="18" />
-                                                                    </Link>
-                                                                </OverlayTrigger> : '-'
-                                                        }
-                                                    </td>
-                                                }
-                                            </tr>
-                                        )}
-                            </tbody>
-                        </Table>
-                        {
+                                            {location.pathname === "/mywallet" &&
+                                                <td>
+                                                    {
+                                                        withdraw.status === 'Pending' ?
+                                                            <OverlayTrigger placement="top" overlay={<Tooltip>Delete</Tooltip>}>
+                                                                <Link to='#' onClick={(e) => deleteRequest(e, withdraw.id)} className="delete-ticket-icon">
+                                                                    <DeleteIcon width="18" height="18" />
+                                                                </Link>
+                                                            </OverlayTrigger> : '-'
+                                                    }
+                                                </td>
+                                            }
+                                        </tr>
+                                    )}
+                                    </tbody>
+                                </Table>
+                                {
                                     (props.showList === 'withdrawal' || props.showList === "withdrawalRequest") && withdrawData !== null && withdrawData.length > TBL_SHOW_RECORDS ?
-                            <Pagination
-                                nPages={nPages}
-                                currentPage={currentPage}
-                                setCurrentPage={setCurrentPage}
-                                maxPageLimit={maxPageNumberLimit}
-                                minPageLimit={minPageNumberLimit}
-                                perPageLimit={pageNumberLimit}
-                                setMaxPageNumberLimit={setMaxPageNumberLimit}
-                                setMinPageNumberLimit={setMinPageNumberLimit}
-                            /> : null
-                        }
+                                        <Pagination
+                                            nPages={nPages}
+                                            currentPage={currentPage}
+                                            setCurrentPage={setCurrentPage}
+                                            maxPageLimit={maxPageNumberLimit}
+                                            minPageLimit={minPageNumberLimit}
+                                            perPageLimit={pageNumberLimit}
+                                            setMaxPageNumberLimit={setMaxPageNumberLimit}
+                                            setMinPageNumberLimit={setMinPageNumberLimit}
+                                        /> : null
+                                }
                             </div>
 
                             {
@@ -390,7 +389,7 @@ const Withdrawtable = (props) => {
                                     <Link to='#' className="link-text" onClick={() => props.setShowList('withdrawal')}>Show more</Link>
                                 </div>
                             }
-                </div></>
+                        </div></>
             }
         </Fragment>
     );

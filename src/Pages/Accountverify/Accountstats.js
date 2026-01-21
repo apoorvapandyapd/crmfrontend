@@ -1,27 +1,24 @@
-import { Row, Col } from "react-bootstrap";
-
+import {Row, Col, Button} from "react-bootstrap";
 
 const Accountstats = (props) => {
 
     var verify_status;
-    
-    if(Array.isArray(props.verifyStatus)){
+
+    if (Array.isArray(props.verifyStatus)) {
         if (props.verifyStatus[0] === 'Completed') {
             verify_status = 'green';
-        }
-        else{
+        } else {
             verify_status = 'red';
         }
     }
     else{
         if (props.verifyStatus === 'Completed') {
             verify_status = 'green';
-        }
-        else{
+        } else {
             verify_status = 'red';
         }
     }
-    
+
 
     return (
         <Row className="align-items-center mt-32">
@@ -39,20 +36,23 @@ const Accountstats = (props) => {
             {
                 (Array.isArray(props.verifyStatus)) ? // Check if verifyStatus is an array
                     (props.verifyStatus[1] === 'Request_Not_Approved') ? // Check if the first element of verifyStatus is not 'Completed'
-                        <div className="col-12">
+                        <div className="col-12 mt-4">
                             <div className="verification-box red">
-                            Your KYC has been successfully verified, but your IB request is pending. Please reach out to the administrator for any inquiries.
+                                Your KYC has been successfully verified, but your IB request is pending. Please reach
+                                out to the administrator for any inquiries.
                             </div>
                         </div>
-                    : null :
-                (props.verifyStatus !== 'Completed') ? // This condition seems redundant
-                    <Col sm={6} md={6} lg={4}>
-                        <div className="verification-box">
-                                KYC Status <span className="green">{(props?.data !== null) ? props.data.data.approved_count : ''} Approved</span>
-                                <span className="red">{(props?.data !== null) ? props.data.data.rejected_count : ''} Rejected</span>
-                        </div>
-                    </Col>
-                : <Col sm={6} md={6} lg={4} />
+                        : null :
+                    (props.verifyStatus !== 'Completed') ? // This condition seems redundant
+                        <Col sm={6} md={6} lg={4}>
+                            <div className="verification-box">
+                                KYC Status <span
+                                className="green">{(props?.data !== null) ? props.data.data.approved_count : ''} Approved</span>
+                                <span
+                                    className="red">{(props?.data !== null) ? props.data.data.rejected_count : ''} Rejected</span>
+                            </div>
+                        </Col>
+                        : <Col sm={6} md={6} lg={4}/>
                 // There is no corresponding else condition for the initial check
             }
         </Row>

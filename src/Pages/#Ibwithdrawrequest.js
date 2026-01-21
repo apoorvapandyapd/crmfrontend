@@ -25,10 +25,8 @@ const Ibwithdrawrequest = () => {
 
             const bodyParameters = {};
             const response = await axios.post(WITHDRAW_API_URL, bodyParameters, config)
-
             setWithdraw(response.data)
         } catch (error) {
-            console.error(error);
             if(error.response.status==401){
                 dispatch(redirectAsync());
             }

@@ -23,15 +23,14 @@ const Verify = () => {
 
     useEffect(() => {
 
-
-        if (client.iserror === true && client.alertDiv==false) {
+        if (client.iserror === true && client.alertDiv === false) {
             setAlertDiv(true);
             setLoading(false);
             setSubmitLbl('Submit');
         }
         // redirect authenticated user to dashboard screen
         if (client.islogin === true && client.alreadyLogin === true)
-            if(client.asIB==true){
+            if (client.asIB === true) {
                 if(client.client.verify==='Completed'){
                     history.push('/ib/dashboard')
                 }
@@ -79,7 +78,7 @@ const Verify = () => {
                         <Toast.Body>
                         <ul>
                             {Object.keys(client.message.error).map((error, index) => (
-                                <li className="text-white">
+                                <li className="text-white" key={index}>
                                     {client.message.error[error][0]}
                                 </li>
                             ))}
@@ -100,7 +99,7 @@ const Verify = () => {
                                     </p> */}
                                 </Form.Group>
                                 <div className="d-flex justify-content-center justify-content-sm-between align-items-center flex-wrap">
-                                    <a href={null} onClick={backLogin} className="order-5 order-sm-0">&laquo; Back</a>
+                                    <Link onClick={backLogin} className="order-5 order-sm-0">&laquo; Back</Link>
                                     <Button disabled={loading} type="submit" className="btn btn-primary float-end btn btn-primary mb-3 mb-sm-0 order-1 order-sm-0">{submitLbl}</Button>
                                 </div>
                                 {/* <Button type="button" variant="light">Request a New Code</Button> */}

@@ -8,17 +8,18 @@ import { useHistory } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import ReCAPTCHA from "react-google-recaptcha";
 import { showClient } from "../store/clientslice";
-import { useSelector, useDispatch } from "react-redux";
-import axios from 'axios';
+import { useSelector } from "react-redux";
+// import axios from 'axios';
+import { CustomRequest } from "../Components/RequestService";
 
-const base_url = process.env.REACT_APP_API_URL;
-const FORGOT_PASSWORD_API = base_url+"/reset-password-email";
+// const base_url = process.env.REACT_APP_API_URL;
+// const FORGOT_PASSWORD_API = base_url+"/reset-password-email";
 
 const ForgotPassword = () => {
 
     const history = useHistory();
     const client = useSelector(showClient);
-    const dispatch = useDispatch();
+    // const dispatch = useDispatch();
     const [captchastate, setcaptchastate] = useState(false);
     const [value, setValue] = useState({});
     const [submitLabel, setSubmitLabel] = useState('Send Mail');
@@ -51,62 +52,57 @@ const ForgotPassword = () => {
 
     const loginSubmitHandler = async(event) => {
         event.preventDefault();
-        if(process.env.REACT_APP_ENV=='local'){
+        if (process.env.REACT_APP_ENV === 'local') {
             setSubmitLabel('Loading...');
 
-            let formData = new FormData();
-            formData.append("email",value.email);
-    
-            try {
-                const config = {
-                    headers: { Authorization: `Bearer ${client.token}` }
-                };
-    
-                await axios.post(FORGOT_PASSWORD_API, formData, config).then(res=>{
-                    ;
-                    if(res.data.status_code===200){
+
+            let data = {
+                "email": value.email
+            }
+
+            CustomRequest('reset-password-email', data, (res) => {
+                if (res?.error) {
+                    console.log(res.error);
+                    setSubmitLabel('Send Mail');
+                } else {
+                    if (res.data.status_code === 200) {
 
                         history.push('/login')
                     }
-                    else if(res.data.status_code===500){
-                        setError({...error, email:res.data.message});
+                    else if (res.data.status_code === 500) {
+                        setError({ ...error, email: res.data.message });
                         setSubmitLabel('Send Mail');
                     }
-                })
-            } catch (error) {
-                console.error(error);
-                setSubmitLabel('Send Mail');
-            }
+                }
+            });
+
         }
         else{
             setSubmitLabel('Loading...');
             if(captchastate===false){
                 setError({...error, recaptch:'Please select ReCAPTCHA'});
             }
-            else{
-                let formData = new FormData();
-                formData.append("email",value.email);
-        
-                try {
-                    const config = {
-                        headers: { Authorization: `Bearer ${client.token}` }
-                    };
-        
-                    await axios.post(FORGOT_PASSWORD_API, formData, config).then(res=>{
-                        ;
-                        if(res.data.status_code===200){
+            else {
+
+                let data = {
+                    "email": value.email
+                }
+
+                CustomRequest('reset-password-email', data, (res) => {
+                    if (res?.error) {
+                        console.log(res.error);
+                        setSubmitLabel('Send Mail');
+                    } else {
+                        if (res.data.status_code === 200) {
 
                             history.push('/login')
                         }
-                        else if(res.data.status_code===500){
-                            setError({...error, email:res.data.message});
+                        else if (res.data.status_code === 500) {
+                            setError({ ...error, email: res.data.message });
                             setSubmitLabel('Send Mail');
                         }
-                    })
-                } catch (error) {
-                    console.error(error);
-                    setSubmitLabel('Send Mail');
-                }
+                    }
+                });
             }
         }
     };
@@ -139,7 +135,7 @@ const ForgotPassword = () => {
                             </form>
                             <div className="text-center mt-4 pt-2"><Link className="link-text" to='/login'>Back</Link></div>
                         </div>
-                        <footer>&copy; {new Date().getFullYear()} PM Financials Limited. All Right Reserved.</footer>
+                        <footer>&copy; {new Date().getFullYear()} CRM. All Right Reserved.</footer>
                     </Col>
                 </div>
             </div>

@@ -12,12 +12,12 @@ function IbDashboardHeader(props) {
 
     const copyLink = async () => {
         try {
-            await navigator.clipboard.writeText(props.data.data.referral_link);
-
+          await navigator.clipboard.writeText(props.data.data.referral_link);
+          
+          document.getElementById("ibdashboardcopyid").classList.toggle("active")
+          setTimeout(() => {
             document.getElementById("ibdashboardcopyid").classList.toggle("active")
-            setTimeout(() => {
-                document.getElementById("ibdashboardcopyid").classList.toggle("active")
-            }, "2000")
+          }, "2000")          
         } catch (err) {
         }
     }

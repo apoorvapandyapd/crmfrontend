@@ -29,7 +29,7 @@ const Stats = (props) => {
                             </span>
                         </Link>
                     </OverlayTrigger>
-                    <h2><span>Wallet Balance</span> ${(props.data.data.accountBalance!==undefined) ? props.data.data.accountBalance : '0'} </h2>
+                    <h2><span>Wallet Balance</span> ${(props.data.data.accountBalance !== undefined) ? props.data.data.accountBalance : '0'} </h2>
                 </div>
             </Col>
             <Col sm={6} lg={6} xl={3}>

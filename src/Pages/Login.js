@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react"; 
 
 import Col from 'react-bootstrap/Col';
 import Image from "react-bootstrap/Image";
@@ -41,23 +41,23 @@ const Login = () => {
         }
         // redirect user to verify page
         // if(client.asIB==false || client.asIB=='both'){
-            if (client.islogin === true && client.alreadyLogin === false)
+        if (client.islogin === true && client.alreadyLogin === false)
             history.push('/verify')
-            // redirect authenticated user to dashboard screen
-            
-            if (client.islogin === true && client.alreadyLogin === true){
-                if (client.asIB === true) {
-                    if(client.client.verify==='Completed'){
-                        history.push('/ib/dashboard')
-                    }
-                    else{
-                        history.push('/accountverification')
-                    }
+        // redirect authenticated user to dashboard screen
+
+        if (client.islogin === true && client.alreadyLogin === true){
+            if (client.asIB === true) {
+                if(client.client.verify==='Completed'){
+                    history.push('/ib/dashboard')
                 }
                 else{
-                    history.push('/dashboard')
+                    history.push('/accountverification')
                 }
             }
+            else{
+                history.push('/dashboard')
+            }
+        }
         // }
         // else{
         //     history.push('/ib/dashboard')
@@ -108,10 +108,10 @@ const Login = () => {
                 setLoading(true);
                 setSubmitLabel('Loading...');
                 const { email, password } = event.target.elements;
-                
+
                 browser_version = navigator.sayswho;
                 platform = navigator.platform;
-                
+
                 const data = { email: email.value, password: password.value, browser: browser_version, platform: platform};
                 if (captchastate === true)
                     dispatch(loginAsync(data));
@@ -121,7 +121,7 @@ const Login = () => {
             setLoading(true);
             setSubmitLabel('Loading...');
             const { email, password } = event.target.elements;
-            
+
             browser_version = navigator.sayswho;
             platform = navigator.platform;
 
@@ -141,7 +141,7 @@ const Login = () => {
                     </Col>
                     <Col md={6} className="white-bg col">
                         <div className="content-box m-auto">
-                            <a href="https://pmfinancials.mu/" target="_blank" className="logo" rel="noreferrer">
+                            <a href="https://crm.netulr.com/" target="_blank" className="logo" rel="noreferrer">
                                 <Image src={`${process.env.PUBLIC_URL}/Images/backend-logo.png`} alt="login" fluid />
                             </a>
                             <h1>Sign In </h1>
@@ -156,7 +156,7 @@ const Login = () => {
                                 </Form.Group>
                                 <Form.Group className="mb-3 position-relative" controlId="formBasicPassword">
                                     <Form.Control type={viewpass===true ? 'text' : 'password'} name="password" placeholder="Password" required />
-                                    <span className="password-icon cursor-pointer" onClick={handlePass}>{viewpass === false ? 
+                                    <span className="password-icon cursor-pointer" onClick={handlePass}>{viewpass === false ?
                                         <VisibilityIcon width="16" height="16" /> : <VisibilityOffIcon width="16" height="16" />
                                     }</span>
                                 </Form.Group>
@@ -165,8 +165,8 @@ const Login = () => {
 
                                     <ReCAPTCHA sitekey={process.env.REACT_APP_RECAPCHA_KEY} onChange={onChange} />
                                     {
-                                        alertDiv===true ? 
-                                        <small className="text-danger">{errorMessage}</small> : null
+                                        alertDiv===true ?
+                                            <small className="text-danger">{errorMessage}</small> : null
                                     }
                                 </div>
 
@@ -176,7 +176,7 @@ const Login = () => {
                             <div className="text-center mt-4 pt-3">Are you new? <Link to="/signup" className="link-text">Sign Up</Link></div>
                             {/* <div className="text-center mt-4 pt-3">Need any help? Contact us. <a className="link-text" href={`mailto:parekhjp@gmail.com`}>Click Here</a></div> */}
                         </div>
-                        <footer>&copy; {new Date().getFullYear()} PM Financials Limited. All Right Reserved.</footer>
+                        <footer>&copy; {new Date().getFullYear()} CRM. All Right Reserved.</footer>
                     </Col>
                 </div>
             </div>

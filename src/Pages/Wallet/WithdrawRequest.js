@@ -3,18 +3,21 @@ import { Button, Col, FormControl, FormGroup, Row, OverlayTrigger, Tooltip } fro
 import { Link, useHistory } from "react-router-dom";
 import { redirectAsync, showClient } from "../../store/clientslice";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
+// import axios from "axios";
 import AlertMessage from "../AlertMessage";
 import { PropagateLoader } from "react-spinners";
 import Select from 'react-select';
 import { BackArrowIcon } from "../../Components/icons";
-const base_url = process.env.REACT_APP_API_URL;
-const STORE_WITHDRAW_API = base_url + "/v1/client/send-withdrawrequest";
-const CREATE_WITHDRAW_API = base_url + "/v1/client/withdraw-paymentmethods";
-const GET_CHARGE_API = base_url + "/v1/client/charge-paymentmethods";
+import { CustomRequest } from "../../Components/RequestService";
+
+// const base_url = process.env.REACT_APP_API_URL;
+// const STORE_WITHDRAW_API = base_url + "/v1/client/send-withdrawrequest";
+// const CREATE_WITHDRAW_API = base_url + "/v1/client/withdraw-paymentmethods";
+// const GET_CHARGE_API = base_url + "/v1/client/charge-paymentmethods";
 
 const WithdrawRequest = ({checkHistory, backHandler}) => {
-    
+    // var CryptoJS = require("crypto-js");
+
     const history = useHistory();
     const client = useSelector(showClient);
     if (client.islogin === false)
@@ -22,22 +25,38 @@ const WithdrawRequest = ({checkHistory, backHandler}) => {
 
         history.push('/login')
     }
-    
+    // const [withdraw, setWithdraw] = useState(false);
+    // const [iserror, setIserror] = useState(null);
     const [error, setError] = useState({});
     const [alertDiv, setAlertDiv] = useState(false);
     const [paymentMethod, setPaymentMethod] = useState(null);
     const [paymentOption, setPaymentOption] = useState(null);
+    // const [balance, setBalance] = useState(null);
     const [errorMessage, setErrorMesssage] = useState(null);
     const [gatewayType, setGatewayType] = useState(null);
     const [lastPaymentMethod, setLastPaymentMethod] = useState('');
+    // const [gatewayName, setGatewayName] = useState(null);
     const [fieldData, setFieldData] = useState([]);
+    // const [checked, setChecked] = useState(null);
     let [loading, setLoading] = useState(false);
     const [currenyWise, setCurrencyWise] = useState(null);
+    // const cryptoKey = `${client.client.id}-${client.client.email}`;
     const [value, setValue] = useState({
         'payment_gateway':''
     });
-    
+    // const initValue = {
+    //     'payment_gateway':''
+    // };
     const dispatch = useDispatch();
+
+    // let alertDiv = '';
+    // if (withdraw === true) {
+    //     alertDiv = <Alert className="alert alert-success">Withdraw Request successfully</Alert>;
+    // }
+    // let errorDiv = '';
+    // if (iserror !== null) {
+    //     errorDiv = <Alert className="alert alert-danger">{iserror}</Alert>;
+    // }
 
     const newWithdrawSubmitHandler = async(event) => {
         event.preventDefault();
@@ -46,105 +65,195 @@ const WithdrawRequest = ({checkHistory, backHandler}) => {
         setError({});
         setErrorMesssage(null);
         const { amount } = event.target.elements;
-        const data = { amount: amount.value,client_payment_id: lastPaymentMethod };
+        const data = { amount: amount.value, client_payment_id: lastPaymentMethod };
 
-        try {
-            const config = {
-                headers: { Authorization: `Bearer ${client.token}` }
-            };
+        let formData = new FormData();
+        formData.append("amount", data.amount);
+        formData.append("currency_wise", currenyWise);
+        formData.append("client_payment_id", data.client_payment_id ?? '');
+        formData.append("gateway_type", gatewayType ?? '');
 
-            let formData = new FormData();
-            formData.append("amount", data.amount);
-            formData.append("currency_wise", currenyWise);
-            formData.append("client_payment_id", data.client_payment_id ?? '');
-            formData.append("gateway_type", gatewayType ?? '');
+        if (client.client.ib_status === true) {
+            formData.append("as_ib", true);
+        }
+        if (gatewayType === 'Manual') {
+            Object.keys(value).forEach(function (key) {
+                formData.append(key, value[key]);
+            });
+        }
 
-            if (client.client.ib_status === true) {
-                formData.append("as_ib",true);
-            }
-            if (gatewayType === 'Manual') {
-                Object.keys(value).forEach(function(key) {
-                    formData.append(key, value[key]);
-                });
-            }
-            
-            await axios.post(STORE_WITHDRAW_API, formData, config).then(response=>{
-                if(response.data.status_code === 200){
+
+        CustomRequest('send-withdrawrequest', formData, client.token, (res) => {
+            if (res?.error) {
+                console.log(res.error);
+                let err = res?.error?.response.data.errors;
+                setError(err);
+                setLoading(false);
+                if (res?.error?.response.status === 401) {
+                    dispatch(redirectAsync());
+                }
+            } else {
+                if (res.data.status_code === 200) {
+                    // setWithdraw(true);
                     backFunction(event);
                 }
-                else if(response.data.status_code === 500){ 
-                    setErrorMesssage(response.data.message);
+                else if (res.data.status_code === 500) {
+                    setErrorMesssage(res.data.message);
                     setAlertDiv(true);
                 }
                 setLoading(false);
-            }).catch((error)=>{
-                if (error.response) {
-                    console.log(error);
-                    let err = error.response.data.errors;
-                    setError(err);
-                    setLoading(false);
-                }
-            });
-        } catch (error) {
-            console.error(error);
-            if (error.response.status === 401) {
-                setLoading(false);
-                dispatch(redirectAsync());
             }
-        }
+        });
+
+        // try {
+        //     const config = {
+        //         headers: { Authorization: `Bearer ${client.token}` }
+        //     };
+
+        //     let formData = new FormData();
+        //     formData.append("amount", data.amount);
+        //     formData.append("currency_wise", currenyWise);
+        //     formData.append("client_payment_id", data.client_payment_id ?? '');
+        //     formData.append("gateway_type", gatewayType ?? '');
+
+        //     if (client.client.ib_status === true) {
+        //         formData.append("as_ib",true);
+        //     }
+        //     if (gatewayType === 'Manual') {
+        //         Object.keys(value).forEach(function(key) {
+        //             formData.append(key, value[key]);
+        //         });
+        //     }
+
+        //     await axios.post(STORE_WITHDRAW_API, formData, config).then(response=>{
+        //         if(response.data.status_code === 200){
+        //             // setWithdraw(true);
+        //             backFunction(event);
+        //         }
+        //         else if(response.data.status_code === 500){ 
+        //             setErrorMesssage(response.data.message);
+        //             setAlertDiv(true);
+        //         }
+        //         setLoading(false);
+        //     }).catch((error)=>{
+        //         if (error.response) {
+        //             console.log(error);
+        //             let err = error.response.data.errors;
+        //             setError(err);
+        //             setLoading(false);
+        //         }
+        //     });
+        // } catch (error) {
+        //     console.error(error);
+        //     if (error.response.status === 401) {
+        //         setLoading(false);
+        //         dispatch(redirectAsync());
+
+        //     }
+        // }
+
     };
 
     async function fetchData() {
         setLoading(true);
-        try {
-            const config = {
-                headers: { Authorization: `Bearer ${client.token}` }
-            };
-            const data = {
-                value: ''
-            };
-            
-            await axios.post(CREATE_WITHDRAW_API,data, config).then(response=>{
-                if(response.data.status_code === 200){
+        const data = {
+            value: ''
+        };
+        CustomRequest('withdraw-paymentmethods', data, client.token, (res) => {
+            if (res?.error) {
+                console.log(res.error);
+                setLoading(false);
+                let err = res?.error?.response.data.errors;
+                setError(err);
+                if (res?.error?.response.status === 401) {
+                    dispatch(redirectAsync());
+                }
+            } else {
+                if (res.data.status_code === 200) {
 
-                    setPaymentMethod(response.data.data.payment_methods);
+                    setPaymentMethod(res.data.data.payment_methods);
 
-                    const transformedOptions = Object.entries(response.data.data.payment_methods).map(([status, methods]) => ({
+                    const transformedOptions = Object.entries(res.data.data.payment_methods).map(([status, methods]) => ({
                         label: status === 'approve' ? 'Used Payment Methods' : 'Other Payment Methods',
                         options: methods.map(({ id, name }) => ({ value: id, label: name }))
                     }));
 
                     setPaymentOption(transformedOptions);
-                    
-                    setGatewayType(response.data.data.gateway_type);
+
+                    // setBalance(res.data.data.total_balance);
+                    setGatewayType(res.data.data.gateway_type);
                     if (client.client.ib_status !== true) {
-                        setFieldData(response.data.data.fields);
-                        setValue(response.data.data.values);
-                        setLastPaymentMethod(response.data.data.last_payment_method);
+                        setFieldData(res.data.data.fields);
+                        setValue(res.data.data.values);
+                        setLastPaymentMethod(res.data.data.last_payment_method);
                     }
-                    
+
                 }
-                else if(response.data.status_code === 500){ 
-                    setErrorMesssage(response.data.message);
+                else if (res.data.status_code === 500) {
+                    setErrorMesssage(res.data.message);
                     setAlertDiv(true);
                 }
                 setLoading(false);
-
-            }).catch((error)=>{
-                if (error.response) {
-                    console.log(error);
-                    setLoading(false);
-                    let err = error.response.data.errors;
-                    setError(err);
-                }
-            });
-        } catch (error) {
-            console.error(error);
-            if (error.response.status === 401) {
-                setLoading(false);
-                dispatch(redirectAsync());
             }
-        }
+        });
+
+
+
+
+
+
+        // try {
+        //     const config = {
+        //         headers: { Authorization: `Bearer ${client.token}` }
+        //     };
+
+        //     const data = {
+        //         value: ''
+        //     };
+            
+            
+        //     await axios.post(CREATE_WITHDRAW_API,data, config).then(response=>{
+        //         if(response.data.status_code === 200){
+
+        //             setPaymentMethod(response.data.data.payment_methods);
+
+        //             const transformedOptions = Object.entries(response.data.data.payment_methods).map(([status, methods]) => ({
+        //                 label: status === 'approve' ? 'Used Payment Methods' : 'Other Payment Methods',
+        //                 options: methods.map(({ id, name }) => ({ value: id, label: name }))
+        //             }));
+
+        //             setPaymentOption(transformedOptions);
+                    
+        //             // setBalance(response.data.data.total_balance);
+        //             setGatewayType(response.data.data.gateway_type);
+        //             if (client.client.ib_status !== true) {
+        //                 setFieldData(response.data.data.fields);
+        //                 setValue(response.data.data.values);
+        //                 setLastPaymentMethod(response.data.data.last_payment_method);
+        //             }
+                    
+        //         }
+        //         else if(response.data.status_code === 500){ 
+        //             setErrorMesssage(response.data.message);
+        //             setAlertDiv(true);
+        //         }
+        //         setLoading(false);
+
+        //     }).catch((error)=>{
+        //         if (error.response) {
+        //             console.log(error);
+        //             setLoading(false);
+        //             let err = error.response.data.errors;
+        //             setError(err);
+        //         }
+        //     });
+        // } catch (error) {
+        //     console.error(error);
+        //     if (error.response.status === 401) {
+        //         setLoading(false);
+        //         dispatch(redirectAsync());
+        //     }
+        // }
     }
     const handleInput = (e) => {
         setValue({...value,[e.target.name]:e.target.value});
@@ -152,51 +261,94 @@ const WithdrawRequest = ({checkHistory, backHandler}) => {
 
     async function handlePayment(event) {
         setFieldData([]);
-        try {
-            let payment_id = event.value;
-            console.log(payment_id);
-            setLastPaymentMethod(payment_id);
+        let payment_id = event.value;
+        console.log(payment_id);
+        setLastPaymentMethod(payment_id);
 
-            let gatewayData = '';
+        let gatewayData = '';
 
-            for (const group of Object.values(paymentMethod)) {
-                const selectedGateway = group.find(obj => obj.id === payment_id);
-                if (selectedGateway) {
-                    gatewayData = selectedGateway;
+        for (const group of Object.values(paymentMethod)) {
+            const selectedGateway = group.find(obj => obj.id === payment_id);
+            if (selectedGateway) {
+                gatewayData = selectedGateway;
+            }
+        }
+
+        let gateway_type = gatewayData.gateway_type;
+        let gateway_name = gatewayData.gateway_name;
+
+        setGatewayType(gateway_type);
+
+        const data = { id: payment_id, gateway_type: gateway_type, gateway_name: gateway_name, type: 'withdraw' };
+        CustomRequest('charge-paymentmethods', data, client.token, (res) => {
+            if (res?.error) {
+                console.log(res.error);
+                let err = res?.error?.response.data.errors;
+                setError(err);
+                if (res?.error?.response.status === 401) {
+                    dispatch(redirectAsync());
+                }
+            } else {
+                if (res.data.status_code === 200) {
+                    setCurrencyWise(res.data.data.currency_wise)
+                    // setGatewayName(res.data.data.gateway_name);
+                    setFieldData(res.data.data.fields);
+                    setValue(res.data.data.values);
                 }
             }
+        });
 
-            console.log(gatewayData);
+
+
+
+
+
+        // try {
+        //     let payment_id = event.value;
+        //     console.log(payment_id);
+        //     setLastPaymentMethod(payment_id);
+
+        //     let gatewayData = '';
+
+        //     for (const group of Object.values(paymentMethod)) {
+        //         const selectedGateway = group.find(obj => obj.id === payment_id);
+        //         if (selectedGateway) {
+        //             gatewayData = selectedGateway;
+        //         }
+        //     }
+
+        //     console.log(gatewayData);
     
-            const config = {
-                headers: { Authorization: `Bearer ${client.token}` }
-            };
-            let gateway_type = gatewayData.gateway_type;
-            let gateway_name = gatewayData.gateway_name;
+        //     const config = {
+        //         headers: { Authorization: `Bearer ${client.token}` }
+        //     };
+        //     let gateway_type = gatewayData.gateway_type;
+        //     let gateway_name = gatewayData.gateway_name;
 
-            setGatewayType(gateway_type);
+        //     setGatewayType(gateway_type);
 
-            const data = { id: payment_id, gateway_type:gateway_type,gateway_name: gateway_name, type:'withdraw'};
-            await axios.post(GET_CHARGE_API, data, config).then(response=>{
+        //     const data = { id: payment_id, gateway_type:gateway_type,gateway_name: gateway_name, type:'withdraw'};
+        //     await axios.post(GET_CHARGE_API, data, config).then(response=>{
 
-                if(response.data.status_code === 200){
-                    setCurrencyWise(response.data.data.currency_wise)
-                    setFieldData(response.data.data.fields);
-                    setValue(response.data.data.values);
-                }
-            }).catch((error)=>{
-                if (error.response) {
-                    let err = error.response.data.errors;
-                    setError(err);
-                }
-            });
+        //         if(response.data.status_code === 200){
+        //             setCurrencyWise(response.data.data.currency_wise)
+        //             // setGatewayName(response.data.data.gateway_name);
+        //             setFieldData(response.data.data.fields);
+        //             setValue(response.data.data.values);
+        //         }
+        //     }).catch((error)=>{
+        //         if (error.response) {
+        //             let err = error.response.data.errors;
+        //             setError(err);
+        //         }
+        //     });
 
-        } catch (error) {
-            console.error(error);
-            if (error.response.status === 401) {
-                dispatch(redirectAsync());
-            }
-        }        
+        // } catch (error) {
+        //     console.error(error);
+        //     if (error.response.status === 401) {
+        //         dispatch(redirectAsync());
+        //     }
+        // }        
     }
 
     const formatOptionLabel = ({ label }) => (
@@ -238,6 +390,7 @@ const WithdrawRequest = ({checkHistory, backHandler}) => {
                     <div className="w-100 border-0">
                         {alertDiv && <AlertMessage type='danger' message={errorMessage} />}
                         <div className='p-40'>
+                                {/* {paymentMethod == null || paymentMethod.length == 0 ? <>You need to add payment method for withdraw money in wallet, <b><Link to="/create/payment/method" className="">Click Here</Link></b> To Add Payment Method</> : <> */}
                             <form onSubmit={newWithdrawSubmitHandler}>
                                 <FormGroup className="mb-3">
                                     <label>Select Payment Method</label>

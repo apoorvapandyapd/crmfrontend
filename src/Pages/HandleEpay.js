@@ -1,14 +1,13 @@
-import React from 'react'
+import React, { Fragment } from 'react'
+import Innerlayout from "../Components/Innerlayout";
 import { useSelector } from 'react-redux';
 import { showClient } from '../store/clientslice';
 import axios from 'axios';
 import { PropagateLoader } from 'react-spinners';
-
 const base_url = process.env.REACT_APP_API_URL;
 const EPAY_API = base_url + "/v1/client/pay-epay";
 
 function HandleEpay() {
-
     const client = useSelector(showClient);
 
     let gatewayID = localStorage.getItem('gatewayID');

@@ -1,5 +1,6 @@
 import { useState } from 'react';
-
+// import './App.css';
+// import { CameraFeed } from './CameraFeed';
 
 function IpCheck() {
 
@@ -62,7 +63,6 @@ function IpCheck() {
     function handleCandidate(candidate){
         //match just the IP address
 
-
         var ip_regex = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/
         var ip_addr = ip_regex.exec(candidate)[1];
         //remove duplicates
@@ -94,18 +94,6 @@ function IpCheck() {
         });
     }, 1000);
 }
-//log IP addresses
-  // getIPs(function(ip){
-  //     //local IPs
-  //     if (ip.match(/^(192\.168\.|169\.254\.|10\.|172\.(1[6-9]|2\d|3[01]))/))
-  //         console.log("Local IPs: "+ip);
-  //     //IPv6 addresses
-  //     else if (ip.match(/^[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7}$/))
-  //         console.log("IPv6 Addresses: "+ip);
-  //     //assume the rest are public IPs
-  //     else
-  //         console.log("Public IPs: "+ip);
-  // });
 
   return (
     <div>

@@ -1,0 +1,243 @@
+import axios from 'axios';
+import React, { Fragment, useEffect, useState } from 'react';
+import { Col, Form, FormControl, Row } from 'react-bootstrap';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useHistory, useLocation } from 'react-router-dom';
+import Innerlayout from '../../Components/Innerlayout';
+import { redirectAsync, showClient } from '../../store/clientslice';
+import PropagateLoader from "react-spinners/PropagateLoader";
+
+const base_url = process.env.REACT_APP_API_URL;
+const CREATE_PAYMENT_GROUP_API = base_url + "/v1/client/create-paymentmethod";
+const STORE_PAYMENT_GROUP_API = base_url + "/v1/client/store-paymentmethod";
+
+function CreatePayment(props) {
+
+    const client = useSelector(showClient);
+    let location = useLocation();
+    let history = useHistory();
+    const dispatch = useDispatch();
+
+    const [data, setData] = useState([]);
+    const [listData, setListData] = useState([]);
+    const [fieldData, setFieldData] = useState([]);
+    const [paymentId, setPaymentId] = useState(null);
+    const [paymentName, setPaymentName] = useState(null);
+
+    let [loading, setLoading] = useState(false);
+    const [value, setValue] = useState({
+        'payment_gateway':''
+    });
+
+    const initValue = {
+        'payment_gateway':''
+    };
+
+    const [error, setError] = useState({});
+
+    async function fetchData(){
+        try {
+            const config = {
+                headers: { Authorization: `Bearer ${client.token}` }
+            };
+
+            const bodyParameters = {
+                key: "value"
+            };
+
+            setLoading(true);
+
+            await axios.post(CREATE_PAYMENT_GROUP_API, bodyParameters, config).then(res=>{
+                if(res.data.status_code===200){
+
+                    setData(res.data.data);
+                    // let new_payment_group = [];
+
+                    // res.data.data.map(val=>[
+                    //     new_payment_group.push(<option  value={val.id}>{val.payment_name}</option>)
+                    // ]);
+                    // setListData([new_payment_group]);
+
+            
+                }
+
+                setLoading(false);
+            })
+        } catch (error) {
+            console.error(error);
+            if(error.response.status==401){
+                setLoading(false);
+                dispatch(redirectAsync());
+            }
+        }
+    }
+
+    // const handleType=(e)=>{
+    //     let type_id = e.target.value;
+    //     let new_payment_group = [];
+
+    //     data.map(val=>[
+    //         (val.payment_type==type_id) ?
+    //         new_payment_group.push(<option value={val.id}>{val.payment_name}</option>) : null
+    //     ]);
+
+    //     setListData([new_payment_group]);
+    // }
+
+    const handlePayment=(e)=>{
+        let payment_id = e.target.value;
+        //let payment_name = e.target.name;
+        document.getElementById("paymentForm").reset();
+        let myAnchor = document.getElementById(e.target.value);
+        let gateway_type = e.target.getAttribute('data-type');
+        let gateway_name = e.target.getAttribute('data-name');
+        setPaymentName(gateway_name);
+
+        data.map(val=>[
+            (val.id==payment_id) ?
+            setFieldData(val.fields)
+            : null
+        ]);
+
+        setPaymentId(payment_id);
+    }
+
+
+    const handleInput = (e) => {
+        setValue({...value,[e.target.name]:e.target.value});
+    }
+
+    const submitPaymentGroup=async(e)=>{
+        e.preventDefault();
+        setLoading(true);
+
+        value['payment_gateway'] = paymentId;
+        const data = value;
+
+        
+
+        try {
+            const config = {
+                headers: { Authorization: `Bearer ${client.token}` }
+            };
+    
+            await axios.post(STORE_PAYMENT_GROUP_API, data, config).then((res)=>{
+                if(res.data.status_code===200){
+
+                    history.push('/list/wallet');
+                }
+                else if(res.data.status_code==500){
+                    ;
+                }
+
+                setLoading(false);
+            }).catch((error) => {
+                if (error.response) {
+                    setLoading(false);
+                    console.log(error.response.data.errors);
+                    setError(error.response.data.errors);
+                }
+            });
+        } catch (error) {
+            setLoading(false);
+            console.error(error);
+        }
+    }
+
+    useEffect(() => {
+        fetchData();
+    },[])
+
+    useEffect(() => {
+        setValue(initValue);
+    },[paymentId])
+
+    return (
+        <Fragment>
+                <Innerlayout>
+                {
+                    (loading==true) ? <PropagateLoader
+                        color={'#000b3e'}
+                        loading={true}
+                        cssOverride={{textAlign:'center', alignItems:'center', backgroundColor:'rgb(251,252,252,0.8)', display:'flex', justifyContent:'center', width:'100%', height:'100vh'}}
+                        size={25}
+                        aria-label="Loading Spinner"
+                        data-testid="loader"
+                    /> :
+                    <div className="box-wrapper w-700">
+                        <div className="card-body create-ticket p-0 bg-white">
+                            <h2 className="mb-0 px-40">
+                                    <Link to='/list/wallet'><a href={null} className="back-arrow">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M9.56945 18.82C9.37945 18.82 9.18945 18.75 9.03945 18.6L2.96945 12.53C2.67945 12.24 2.67945 11.76 2.96945 11.47L9.03945 5.4C9.32945 5.11 9.80945 5.11 10.0995 5.4C10.3895 5.69 10.3895 6.17 10.0995 6.46L4.55945 12L10.0995 17.54C10.3895 17.83 10.3895 18.31 10.0995 18.6C9.95945 18.75 9.75945 18.82 9.56945 18.82Z" fill="#0B0B16"/>
+                                        <path d="M20.4999 12.75H3.66992C3.25992 12.75 2.91992 12.41 2.91992 12C2.91992 11.59 3.25992 11.25 3.66992 11.25H20.4999C20.9099 11.25 21.2499 11.59 21.2499 12C21.2499 12.41 20.9099 12.75 20.4999 12.75Z" fill="#0B0B16"/>
+                                    </svg>
+                                </a></Link>
+                                Create Payment Group
+                            </h2>
+                            <div className='p-40'>
+                                {/* <Form.Group className="mb-3 custom_radio">   
+                                        {
+                                            (client.asIB==false || client.asIB=='both') ?
+                                            <>
+                                            <input type="radio" name='account' id='deposit' value='1' onChange={handleType} />
+                                            <label for='deposit'>Deposit</label>
+                                            </> : null
+                                        }                         
+                                        <input type="radio" name='account' id='withdraw' value='2' onChange={handleType} />
+                                        <label for='withdraw'>Withdraw</label>
+                                </Form.Group> */}
+                                <div className="row payment-logo ">
+
+                                         {data!==null && data.map((method,i) =>
+                                            <>
+                                             <div className="form-group col-6 col-sm-3">
+                                                <FormControl type="radio" value={method.id} data-name={method.payment_name}  onChange={(e)=>handlePayment(e)} name="account_group_id" id={`${method.id}-${i}`} />
+                                                <label for={`${method.id}-${i}`}><img src={method.logo} alt=""/><p className='text-center mt-2 pb-2'>{method.payment_name}</p></label>
+                                                
+
+                                            </div>
+                                            {/* <div onClick={(e)=>paymentChange(e,`${method.id}-${i}`)} id={`${method.id}-${i}`} data-name={method.name} data-type={method.gateway_type} className="col-6 col-sm-4">
+                                                <img id={`${method.id}-${i}`}  src={method.logo} alt=""/>
+                                            </div> */}
+                                            </> )} 
+                                        </div>
+                                {/* <Form.Group className="">
+                                        <select className="form-control select" name='account_group_id' onChange={handlePayment}>
+                                            <option selected disabled>Select payment method</option>
+                                            {
+                                                (listData!==[]) ? listData : null
+                                            }
+                                        </select>
+                                        <small className="text-danger">{error.payment_gateway}</small>
+                                </Form.Group> */}
+                               {paymentName == 'Stripe' || paymentName == 'Paypal' ? <><form onSubmit={submitPaymentGroup} id='paymentForm'><Form.Group className="mt-4">Coming soon please contact on this xyz@parkmoney.com</Form.Group></form></>:<><form onSubmit={submitPaymentGroup} id='paymentForm'>
+                                    <Form.Group className="mb-4">
+                                    <Row>
+                                                {
+                                                    fieldData!==null && fieldData.map(val=>(
+                                                        <Col md={6} className="mt-3" >
+                                                        {val.type !='textarea' ? <><label>{val.label}</label>
+                                                            <input type={val.type} className='form-control' name={val.key} id={val.key} placeholder={val.label} onChange={handleInput} /></>
+                                                        : <><label>{val.label}</label><FormControl maxLength={100} as="textarea" name={val.key}  id={val.key} onChange={handleInput} placeholder={val.label} rows={2} /></> }
+                                                        <small className="text-danger">{error[val.key]}</small>
+                                                        </Col>
+                                                    ))
+                                                }
+                                                </Row>
+                                    </Form.Group>
+                                        <div className="d-flex justify-content-center justify-content-sm-between align-items-center flex-wrap">
+                                        <Link to="/list/wallet" className='order-5 order-sm-0'>&laquo; Back</Link>
+                                            <button type="submit" className="btn btn-primary float-end btn btn-primary mb-3 mb-sm-0 order-1 order-sm-0">Create</button>
+                                    </div>
+                                </form></>} 
+                            </div>
+                        </div>
+                    </div>
+                }
+                </Innerlayout>
+        </Fragment>
+    );
+}
+
+export default CreatePayment;

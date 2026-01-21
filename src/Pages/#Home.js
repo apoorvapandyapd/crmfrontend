@@ -1,0 +1,14 @@
+import { Fragment } from "react";
+import Header from "../Components/Header";
+
+function Home() {
+    return (
+        <Fragment>
+            <Header />
+            <h1>Pmfinancials Home</h1>
+            
+        </Fragment>
+    );
+}
+
+export default Home;

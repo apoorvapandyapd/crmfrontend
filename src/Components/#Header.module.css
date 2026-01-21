@@ -1,0 +1,21 @@
+.header {
+    padding: 5px;
+    background-color: #cccccc;
+}
+
+.linkright {
+    float: right;
+    margin-right: 5px;
+    position: absolute;
+    right: 5px;
+    top: 25px;
+    width: 180px;
+}
+
+.linkrhead {
+    padding: 5px;
+    border: 1px solid #525252;
+    border-radius: 5px;
+    float: left;
+    margin-left: 10px;
+}

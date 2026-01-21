@@ -1,21 +1,30 @@
-import React, { Suspense } from 'react';
-import { Route } from "react-router-dom";
-import { Switch } from 'react-router-dom';
+import React, {Suspense} from 'react';
+import {Route} from "react-router-dom";
+import {Switch} from 'react-router-dom';
 import BecomeIb from '../Pages/IB/BecomeIb';
 import Notification from '../Pages/Notification';
 import Signup from '../Pages/Signup';
 import TermsConditions from '../Pages/TermsConditions.js';
-// import TermsCondition from '../Pages/TermsCondition.js';
-// import TradeHistory from '../Pages/TradeHistory';
-// import TradingSteps from '../Pages/TradingSteps';
+// import TermsCondition from '../Pages/#TermsCondition.js';
+// import TradeHistory from '../Pages/#TradeHistory.js';
+// import TradingSteps from '../Pages/#TradingSteps.js';
 import IndividualForm from '../Pages/MtAccount/IndividualForm';
 import HandleEpay from '../Pages/HandleEpay';
 import TabIndex from '../Pages/Individualform/TabIndex.js';
-// import WithdrawRequest from '../Pages/Wallet/WithdrawRequest.js';
-const MyWallet = React.lazy(() => import('../Pages/Wallet/MyWallet'));
-const Login = React.lazy(() => import('../Pages/Login'));
+import WithdrawRequest from '../Pages/Wallet/WithdrawRequest.js';
+import ChooseForm from '../Pages/MtAccount/ChooseForm.js';
+
+
 // const Home = React.lazy(() => import('../Pages/Home'));
 // const Signup = React.lazy(() => import('../Pages/Signup'));
+// const Newdeposit = React.lazy(() => import('../Pages/Newdeposit'));
+// const Ibwithdrawrequest = React.lazy(() => import('../Pages/Ibwithdrawrequest'));
+// const Newwithdraw = React.lazy(() => import('../Pages/Newwithdraw.js'));
+// const Newtransfer = React.lazy(() => import('../Pages/Newtransfer'));
+const CreateLive = React.lazy(() => import('../Pages/MtAccount/CreateLive'));
+
+const MyWallet = React.lazy(() => import('../Pages/Wallet/MyWallet'));
+const Login = React.lazy(() => import('../Pages/Login'));
 const Nomatch = React.lazy(() => import('../Pages/Nomatch'));
 const Verify = React.lazy(() => import('../Pages/Verify'));
 const Dashboard = React.lazy(() => import('../Pages/Dashboard'));
@@ -24,38 +33,35 @@ const Profile = React.lazy(() => import('../Pages/Profile'));
 const Settings = React.lazy(() => import('../Pages/Settings'));
 const Faq = React.lazy(() => import('../Pages/Faq'));
 const Changepassword = React.lazy(() => import('../Pages/Changepassword'));
-// const Depositlist = React.lazy(() => import('../Pages/Depositlist'));
-// const Newdeposit = React.lazy(() => import('../Pages/Newdeposit'));
+// const Depositlist = React.lazy(() => import('../Pages/#Depositlist.js'));
 // const Payment = React.lazy(() => import('../Pages/#Payment.js'));
-// const Withdrawrequest = React.lazy(() => import('../Pages/Withdrawrequest'));
-// const Ibwithdrawrequest = React.lazy(() => import('../Pages/Ibwithdrawrequest'));
-// const Newwithdraw = React.lazy(() => import('../Pages/Newwithdraw.js'));
-// const Transfer = React.lazy(() => import('../Pages/Transfer'));
-// const Newtransfer = React.lazy(() => import('../Pages/Newtransfer'));
+// const Withdrawrequest = React.lazy(() => import('../Pages/#Withdrawrequest.js'));
+// const Ibwithdrawrequest = React.lazy(() => import('../Pages/#Ibwithdrawrequest.js'));
+// const Newwithdraw = React.lazy(() => import('../Pages/#Newwithdraw.js'));
+// const Transfer = React.lazy(() => import('../Pages/#Transfer.js'));
 const Ticket = React.lazy(() => import('../Pages/Ticket'));
 const CreateTicket = React.lazy(() => import('../Pages/Ticketpages/CreateTicket'));
 const ShowTicket = React.lazy(() => import('../Pages/Ticketpages/ShowTicket'));
-// const DocumentUpload = React.lazy(() => import('../Pages/DocumentUpload'));
-// const UpdateDocument = React.lazy(() => import('../Pages/DocumentUpload/UpdateDocument'));
+const DocumentUpload = React.lazy(() => import('../Pages/DocumentUpload'));
+// const UpdateDocument = React.lazy(() => import('../Pages/DocumentUpload/#UpdateDocument.js'));
 const ForgotPassword = React.lazy(() => import('../Pages/ForgotPassword'));
 const ForgotPasswordOuter = React.lazy(() => import('../Pages/ForgotPasswordOuter'));
 const CreateDemo = React.lazy(() => import('../Pages/MtAccount/CreateDemo'));
-// const CreateLive = React.lazy(() => import('../Pages/MtAccount/CreateLive'));
 // const EditAccount = React.lazy(() => import('../Pages/MtAccount/EditAccount'));
 // const EditLiveAccount = React.lazy(() => import('../Pages/MtAccount/EditLiveAccount'));
 const ChangeMtPass = React.lazy(() => import('../Pages/MtAccount/ChangeMtPass'));
 const ChangeInvestPass = React.lazy(() => import('../Pages/MtAccount/ChangeInvestPass'));
 const MtAccount = React.lazy(() => import('../Pages/MtAccount'));
-// const Wallet = React.lazy(() => import('../Pages/Wallet'));
-// const CreatePayment = React.lazy(() => import('../Pages/WalletPage/CreatePayment'));
-// const EditPayment = React.lazy(() => import('../Pages/WalletPage/EditPayment'));
-// const IpCheck = React.lazy(() => import('../Pages/IpCheck'));
+// const Wallet = React.lazy(() => import('../Pages/#Wallet.js'));
+// const CreatePayment = React.lazy(() => import('../Pages/WalletPage/#CreatePayment.js'));
+// const EditPayment = React.lazy(() => import('../Pages/WalletPage/#EditPayment.js'));
+// const IpCheck = React.lazy(() => import('../Pages/#IpCheck.js'));
 const Paymentreport = React.lazy(() => import('../Pages/Reports/Paymentreport'));
 const IbDashboard = React.lazy(() => import('../Pages/IB/IbDashboard'));
 const IbClient = React.lazy(() => import('../Pages/IB/IbClient'));
-// const SubIb = React.lazy(() => import('../Pages/IB/SubIb'));
-// const NewIbWithdraw = React.lazy(() => import('../Pages/IB/Newibwithdraw'));
-const Trades = React.lazy(() => import('../Pages/Trades.js'));
+// const SubIb = React.lazy(() => import('../Pages/IB/#SubIb.js'));
+// const NewIbWithdraw = React.lazy(() => import('../Pages/IB/#Newibwithdraw.js'));
+const Trades = React.lazy(() => import('../Pages/Trades'));
 const Corporate = React.lazy(() => import('../Pages/Corporate'));
 const Platform = React.lazy(() => import('../Pages/Platform/Platform.js'));
 
@@ -65,37 +71,37 @@ function Routes(props) {
 
             <Switch>
                 <Route exact path="/">
-                    <Login />
+                    <Login/>
                 </Route>
                 <Route path="/login" exact>
-                    <Login />
+                    <Login/>
                 </Route>
                 <Route path="/signup">
-                    <Signup />
+                    <Signup/>
                 </Route>
                 <Route path="/ib-signup" exact>
                     <Signup type='ib'/>
                 </Route>
                 <Route path="/verify">
-                    <Verify />
+                    <Verify/>
                 </Route>
                 <Route path="/dashboard">
-                    <Dashboard />
+                    <Dashboard/>
                 </Route>
                 <Route path="/accountverification">
-                    <Accountverification />
+                    <Accountverification/>
                 </Route>
                 <Route path="/profile">
-                    <Profile />
+                    <Profile/>
                 </Route>
                 <Route path="/settings">
-                    <Settings />
+                    <Settings/>
                 </Route>
                 <Route path="/changepassword">
-                    <Changepassword />
+                    <Changepassword/>
                 </Route>
                 {/* <Route path="/deposit">
-                    <Depositlist />
+                    <Depositlist/>
                 </Route> */}
                 {/* <Route path="/newdeposit">
                     <Newdeposit />
@@ -114,131 +120,134 @@ function Routes(props) {
                 </Route> */}
                 {/* <Route path="/withdrawalrequest">
                     <WithdrawRequest />
-                </Route> */}
-                {/* <Route path="/newibwithdraw">
+                </Route>
+                <Route path="/newibwithdraw">
                     <NewIbWithdraw />
-                </Route> */}
+                </Route>
 
-                {/* <Route path="/transfer">
+                <Route path="/transfer">
                     <Transfer />
                 </Route> */}
                 {/* <Route path="/newtransfer">
                     <Newtransfer />
                 </Route> */}
                 <Route path="/faq">
-                    <Faq />
+                    <Faq/>
                 </Route>
                 <Route path="/ticket">
-                    <Ticket />
+                    <Ticket/>
                 </Route>
                 <Route path="/create/ticket">
-                    <CreateTicket />
+                    <CreateTicket/>
                 </Route>
                 <Route path="/show/ticket">
-                    <ShowTicket />
+                    <ShowTicket/>
                 </Route>
                 {/* <Route path="/document/upload">
-                    <DocumentUpload />
+                    <DocumentUpload/>
+                </Route>
+                <Route path="/update/document">
+                    <UpdateDocument/>
                 </Route> */}
-                {/* <Route path="/update/document">
-                    <UpdateDocument />
-                </Route> */}
-                
+
                 <Route path="/password/forgot/:token">
-                    <ForgotPasswordOuter />
+                    <ForgotPasswordOuter/>
                 </Route>
                 <Route path="/forgot/password">
-                    <ForgotPassword />
+                    <ForgotPassword/>
                 </Route>
                 <Route path="/list/trading-accounts">
-                    <MtAccount />
+                    <MtAccount/>
                 </Route>
                 {/* <Route path="/edit/account">
-                    <EditAccount />
-                </Route> */}
-                {/* <Route path="/edit/liveaccount">
-                    <EditLiveAccount />
+                    <EditAccount/>
+                </Route>
+                <Route path="/edit/liveaccount">
+                    <EditLiveAccount/>
                 </Route> */}
                 <Route path="/change/main-password/:id">
-                    <ChangeMtPass />
+                    <ChangeMtPass/>
                 </Route>
                 <Route path="/change/invest-password/:id">
-                    <ChangeInvestPass />
+                    <ChangeInvestPass/>
                 </Route>
                 <Route path="/create/demo/account">
-                    <CreateDemo />
+                    <CreateDemo/>
                 </Route>
-                {/* <Route path="/create/live/account">
+                <Route path="/create/live/account">
                     <CreateLive />
-                </Route> */}
+                </Route>
+                <Route path="/choose/form">
+                    <ChooseForm />
+                </Route>
                 {/* <Route path="/list/wallet">
-                    <Wallet />
+                    <Wallet/>
                 </Route> */}
                 {/* <Route path="/create/payment/method">
-                    <CreatePayment />
+                    <CreatePayment/>
                 </Route> */}
                 {/* <Route path="/edit/payment/method">
-                    <EditPayment />
+                    <EditPayment/>
                 </Route> */}
                 <Route path="/all/notification">
-                    <Notification />
+                    <Notification/>
                 </Route>
                 {/* <Route path="/ip-check">
-                    <IpCheck />
+                    <IpCheck/>
                 </Route> */}
                 <Route path="/report/payment">
-                    <Paymentreport />
+                    <Paymentreport/>
                 </Route>
                 <Route path="/terms/:token">
-                    <TermsConditions />
+                    <TermsConditions/>
                 </Route>
                 {/* <Route path="/trade/history">
-                    <TradeHistory />
+                    <TradeHistory/>
                 </Route> */}
                 <Route path="/ib/dashboard">
-                    <IbDashboard />
+                    <IbDashboard/>
                 </Route>
                 <Route path="/ib/client">
-                    <IbClient />
+                    <IbClient/>
                 </Route>
                 {/* <Route path="/ib/profile">
-                    <SubIb />
+                    <SubIb/>
                 </Route> */}
                 <Route path="/becomeib">
-                    <BecomeIb />
+                    <BecomeIb/>
                 </Route>
                 {/* <Route path="/tradingsteps">
-                    <TradingSteps />
+                    <TradingSteps/>
                 </Route> */}
                 <Route path="/trades">
-                    <Trades />
+                    <Trades/>
                 </Route>
                 {/* <Route path="/terms-condition">
-                    <TermsCondition />
+                    <TermsCondition/>
                 </Route> */}
                 <Route path="/individualdetails">
-                    <IndividualForm />
+                    <IndividualForm/>
                 </Route>
                 <Route path="/corporate">
-                    <Corporate />
+                    <Corporate/>
                 </Route>
                 <Route path="/handleEpay">
-                    <HandleEpay />
+                    <HandleEpay/>
                 </Route>
                 <Route path="/mywallet">
-                    <MyWallet />
+                    <MyWallet/>
                 </Route>
                 <Route path="/ibmywallet">
-                    <MyWallet />
+                    <MyWallet/>
                 </Route>
                 <Route path="/individuals">
-                    <TabIndex />
+                    <TabIndex/>
                 </Route>
                 <Route path="/platform">
                     <Platform />
                 </Route>
                 <Route path="*">
-                    <Nomatch />
+                    <Nomatch/>
                 </Route>
 
             </Switch>

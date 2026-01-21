@@ -185,13 +185,13 @@ function Experience({setActiveTab, backEvent, activeTab}) {
                             <label>Do you understand the risks of trading margined/leverage products?*</label>
                             <div className="form-group mt-2 custom_radio">
                                 <input type="radio" id="risk-yes" name="risk_of_trading" onChange={individualChange} value='Yes' checked={data.risk_of_trading=="Yes"}/>
-                                <label for="risk-yes">Yes</label>
+                                <label htmlFor="risk-yes">Yes</label>
                                 <input type="radio" id="risk-no" name="risk_of_trading" onChange={individualChange} value='No' checked={data.risk_of_trading=="No"}/>
-                                <label for="risk-no">No</label>
+                                <label htmlFor="risk-no">No</label>
                             </div>
                             {
                                 data.risk_of_trading=="No" && 
-                                <span className='mt-1 d-block'>Please refer to this document for more information <a style={{ color:'#00aeff' }} href='https://pmfinancials.mu/pdf/Risk_Disclosure.pdf' target='_blank'>Risk Disclosure</a></span>
+                                <span className='mt-1 d-block'>Please refer to this document for more information <a style={{ color:'#00aeff' }} href='https://crm.netulr.com/pdf/Risk%20Warning-ParkmoneySVG.pdf' target='_blank'>Risk Disclosure</a></span>
                             }
                         </div>
                         <small className="text-danger">{error.risk_of_trading}</small>
@@ -202,13 +202,13 @@ function Experience({setActiveTab, backEvent, activeTab}) {
                             <label>How many years trading experience you have?*</label>
                             <div className="form-group mt-2 custom_radio">
                                 <input type="radio" id="securities-0" name="trading_experience" onChange={individualChange} value='Less than 1 year' checked={data.trading_experience=="Less than 1 year"}/>
-                                <label for="securities-0">Less than 1 year</label>
+                                <label htmlFor="securities-0">Less than 1 year</label>
                                 <input type="radio" id="securities-1" name="trading_experience" onChange={individualChange} value='1 year' checked={data.trading_experience=="1 year"}/>
-                                <label for="securities-1">1 year</label>
+                                <label htmlFor="securities-1">1 year</label>
                                 <input type="radio" id="securities-1to3" name="trading_experience" onChange={individualChange} value='1 to 3 years' checked={data.trading_experience=="1 to 3 years"}/>
-                                <label for="securities-1to3">1 to 3 years</label>
+                                <label htmlFor="securities-1to3">1 to 3 years</label>
                                 <input type="radio" id="securities-3" name="trading_experience" onChange={individualChange} value='More than 3 years' checked={data.trading_experience=="More than 3 years"}/>
-                                <label for="securities-3">More than 3 years</label>
+                                <label htmlFor="securities-3">More than 3 years</label>
                             </div>
                             <small className="text-danger">{error.trading_experience}</small>
                         </div>
@@ -216,13 +216,13 @@ function Experience({setActiveTab, backEvent, activeTab}) {
                             <label>Frequency of trades?*</label>
                             <div className="form-group mt-2 custom_radio">
                                 <input type="radio" id="securities-daily" name="trading_experience_ft" onChange={individualChange} value='Daily' checked={data.trading_experience_ft=="Daily"}/>
-                                <label for="securities-daily">Daily</label>
+                                <label htmlFor="securities-daily">Daily</label>
                                 <input type="radio" id="securities-weekly" name="trading_experience_ft" onChange={individualChange} value='Weekly' checked={data.trading_experience_ft=="Weekly"}/>
-                                <label for="securities-weekly">Weekly</label>
+                                <label htmlFor="securities-weekly">Weekly</label>
                                 <input type="radio" id="securities-monthly" name="trading_experience_ft" onChange={individualChange} value='Monthly' checked={data.trading_experience_ft=="Monthly"}/>
-                                <label for="securities-monthly">Monthly</label>
+                                <label htmlFor="securities-monthly">Monthly</label>
                                 <input type="radio" id="securities-yearly" name="trading_experience_ft" onChange={individualChange} value='Yearly' checked={data.trading_experience_ft=="Yearly"}/>
-                                <label for="securities-yearly">Yearly</label>
+                                <label htmlFor="securities-yearly">Yearly</label>
                             </div>
                         </div>
                         <small className="text-danger">{error.trading_experience_ft}</small>
@@ -233,13 +233,13 @@ function Experience({setActiveTab, backEvent, activeTab}) {
                             <label>What is your trading experience trading Derivatives?*</label>
                             <div className="form-group mt-2 custom_radio">
                                 <input type="radio" id="derivatives-0" name="trading_derivatives" onChange={individualChange} value='Less than 1 year' checked={data.trading_derivatives=="Less than 1 year"}/>
-                                <label for="derivatives-0">Less than 1 year</label>
+                                <label htmlFor="derivatives-0">Less than 1 year</label>
                                 <input type="radio" id="derivatives-1" name="trading_derivatives" onChange={individualChange} value='1 year' checked={data.trading_derivatives=="1 year"}/>
-                                <label for="derivatives-1">1 year</label>
+                                <label htmlFor="derivatives-1">1 year</label>
                                 <input type="radio" id="derivatives-1to3" name="trading_derivatives" onChange={individualChange} value='1 to 3 years' checked={data.trading_derivatives=="1 to 3 years"}/>
-                                <label for="derivatives-1to3">1 to 3 years</label>
+                                <label htmlFor="derivatives-1to3">1 to 3 years</label>
                                 <input type="radio" id="derivatives-3" name="trading_derivatives" onChange={individualChange} value='More than 3 years' checked={data.trading_derivatives=="More than 3 years"}/>
-                                <label for="derivatives-3">More than 3 years</label>
+                                <label htmlFor="derivatives-3">More than 3 years</label>
                             </div>
                             <small className="text-danger">{error.trading_derivatives}</small>
                         </div>
@@ -247,13 +247,13 @@ function Experience({setActiveTab, backEvent, activeTab}) {
                             <label>Frequency of trades?*</label>
                             <div className="form-group mt-2 custom_radio">
                                 <input type="radio" id="derivatives-daily" name="derivatives_ft" onChange={individualChange} value='Daily' checked={data.derivatives_ft=="Daily"}/>
-                                <label for="derivatives-daily">Daily</label>
+                                <label htmlFor="derivatives-daily">Daily</label>
                                 <input type="radio" id="derivatives-weekly" name="derivatives_ft" onChange={individualChange} value='Weekly' checked={data.derivatives_ft=="Weekly"}/>
-                                <label for="derivatives-weekly">Weekly</label>
+                                <label htmlFor="derivatives-weekly">Weekly</label>
                                 <input type="radio" id="derivatives-monthly" name="derivatives_ft" onChange={individualChange} value='Monthly' checked={data.derivatives_ft=="Monthly"}/>
-                                <label for="derivatives-monthly">Monthly</label>
+                                <label htmlFor="derivatives-monthly">Monthly</label>
                                 <input type="radio" id="derivatives-yearly" name="derivatives_ft" onChange={individualChange} value='Yearly' checked={data.derivatives_ft=="Yearly"}/>
-                                <label for="derivatives-yearly">Yearly</label>
+                                <label htmlFor="derivatives-yearly">Yearly</label>
                             </div>
                         </div>
                         <small className="text-danger">{error.derivatives_ft}</small>
@@ -264,13 +264,13 @@ function Experience({setActiveTab, backEvent, activeTab}) {
                             <label>What is your trading experience trading CFDs?*</label>
                             <div className="form-group mt-2 custom_radio">
                                 <input type="radio" id="cfds-0" name="trading_in_cfd" onChange={individualChange} value='Less than 1 year' checked={data.trading_in_cfd=="Less than 1 year"}/>
-                                <label for="cfds-0">Less than 1 year</label>
+                                <label htmlFor="cfds-0">Less than 1 year</label>
                                 <input type="radio" id="cfds-1" name="trading_in_cfd" onChange={individualChange} value='1 year' checked={data.trading_in_cfd=="1 year"}/>
-                                <label for="cfds-1">1 year</label>
+                                <label htmlFor="cfds-1">1 year</label>
                                 <input type="radio" id="cfds-1to3" name="trading_in_cfd" onChange={individualChange} value='1 to 3 years' checked={data.trading_in_cfd=="1 to 3 years"}/>
-                                <label for="cfds-1to3">1 to 3 years</label>
+                                <label htmlFor="cfds-1to3">1 to 3 years</label>
                                 <input type="radio" id="cfds-3" name="trading_in_cfd" onChange={individualChange} value='More than 3 years' checked={data.trading_in_cfd=="More than 3 years"}/>
-                                <label for="cfds-3">More than 3 years</label>
+                                <label htmlFor="cfds-3">More than 3 years</label>
                             </div>
                             <small className="text-danger">{error.trading_in_cfd}</small>
                         </div>
@@ -278,13 +278,13 @@ function Experience({setActiveTab, backEvent, activeTab}) {
                             <label>Frequency of trades?*</label>
                             <div className="form-group mt-2 custom_radio">
                                 <input type="radio" id="cfds-daily" name="cfd_ft" onChange={individualChange} value='Daily' checked={data.cfd_ft=="Daily"}/>
-                                <label for="cfds-daily">Daily</label>
+                                <label htmlFor="cfds-daily">Daily</label>
                                 <input type="radio" id="cfds-weekly" name="cfd_ft" onChange={individualChange} value='Weekly' checked={data.cfd_ft=="Weekly"}/>
-                                <label for="cfds-weekly">Weekly</label>
+                                <label htmlFor="cfds-weekly">Weekly</label>
                                 <input type="radio" id="cfds-monthly" name="cfd_ft" onChange={individualChange} value='Monthly' checked={data.cfd_ft=="Monthly"}/>
-                                <label for="cfds-monthly">Monthly</label>
+                                <label htmlFor="cfds-monthly">Monthly</label>
                                 <input type="radio" id="cfds-yearly" name="cfd_ft" onChange={individualChange} value='Yearly' checked={data.cfd_ft=="Yearly"}/>
-                                <label for="cfds-yearly">Yearly</label>
+                                <label htmlFor="cfds-yearly">Yearly</label>
                             </div>
                         </div>
                         <small className="text-danger">{error.cfd_ft}</small>

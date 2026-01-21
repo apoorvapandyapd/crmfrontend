@@ -201,9 +201,9 @@ function Disclouser({setActiveTab, backEvent, activeTab}) {
                             <label>Do you have any pending litigation, disputed account(s) or any other unresolved matter with any other broker and/or company or have been sanctioned by any regulatory authority within the financial services industry?</label>
                             <div className="form-group mt-2 custom_radio">
                                 <input type="radio" id="general-disclosure-1-yes" name="legal_status_clear" onChange={individualChange} value='Yes' checked={data.legal_status_clear=="Yes"}/>
-                                <label for="general-disclosure-1-yes">Yes</label>
+                                <label htmlFor="general-disclosure-1-yes">Yes</label>
                                 <input type="radio" id="general-disclosure-1-no" name="legal_status_clear" onChange={individualChange} value='No' checked={data.legal_status_clear=="No"}/>
-                                <label for="general-disclosure-1-no">No</label>
+                                <label htmlFor="general-disclosure-1-no">No</label>
                             </div>
                             <small className="text-danger">{error.legal_status_clear}</small>
                         </div>
@@ -221,9 +221,9 @@ function Disclouser({setActiveTab, backEvent, activeTab}) {
                             <label>Do you intend to provide power of attorney of this trading account to other any person/persons?</label>
                             <div className="form-group mt-2 custom_radio">
                                 <input type="radio" id="general-disclosure-2-yes" name="poa_intent" onChange={individualChange} value='Yes' checked={data.poa_intent=="Yes"}/>
-                                <label for="general-disclosure-2-yes">Yes</label>
+                                <label htmlFor="general-disclosure-2-yes">Yes</label>
                                 <input type="radio" id="general-disclosure-2-no" name="poa_intent" onChange={individualChange} value='No' checked={data.poa_intent=="No"}/>
-                                <label for="general-disclosure-2-no">No</label>
+                                <label htmlFor="general-disclosure-2-no">No</label>
                             </div>
                             <small className="text-danger">{error.poa_intent}</small>
                         </div>
@@ -241,9 +241,9 @@ function Disclouser({setActiveTab, backEvent, activeTab}) {
                             <label>You/have you during the past 5 years been a partner, director, officer or employee of any broker, or any other company within the financial services industry, or the same of any exchange, board of trade, contract market or clearing organisation?</label>
                             <div className="form-group mt-2 custom_radio">
                                 <input type="radio" id="general-disclosure-3-yes" name="financial_industry_affiliation" onChange={individualChange} value='Yes' checked={data.financial_industry_affiliation=="Yes"}/>
-                                <label for="general-disclosure-3-yes">Yes</label>
+                                <label htmlFor="general-disclosure-3-yes">Yes</label>
                                 <input type="radio" id="general-disclosure-3-no" name="financial_industry_affiliation" onChange={individualChange} value='No' checked={data.financial_industry_affiliation=="No"}/>
-                                <label for="general-disclosure-3-no">No</label>
+                                <label htmlFor="general-disclosure-3-no">No</label>
                             </div>
                             <small className="text-danger">{error.financial_industry_affiliation}</small>
                         </div>
@@ -261,9 +261,9 @@ function Disclouser({setActiveTab, backEvent, activeTab}) {
                             <label>Have you at any time been convicted of any offence by any court? (Road Traffic offences should not be listed).</label>
                             <div className="form-group mt-2 custom_radio">
                                 <input type="radio" id="general-disclosure-4-yes" name="criminal_convictions" onChange={individualChange} value='Yes' checked={data.criminal_convictions=="Yes"}/>
-                                <label for="general-disclosure-4-yes">Yes</label>
+                                <label htmlFor="general-disclosure-4-yes">Yes</label>
                                 <input type="radio" id="general-disclosure-4-no" name="criminal_convictions" onChange={individualChange} value='No' checked={data.criminal_convictions=="No"}/>
-                                <label for="general-disclosure-4-no">No</label>
+                                <label htmlFor="general-disclosure-4-no">No</label>
                             </div>
                             <small className="text-danger">{error.criminal_convictions}</small>
                         </div>
@@ -281,9 +281,9 @@ function Disclouser({setActiveTab, backEvent, activeTab}) {
                             <label>Does any third party have any controlling interest where financial or otherwise, in respect of any trading undertaken on this account?</label>
                             <div className="form-group mt-2 custom_radio">
                                 <input type="radio" id="general-disclosure-5-yes" name="external_control" onChange={individualChange} value='Yes' checked={data.external_control=="Yes"}/>
-                                <label for="general-disclosure-5-yes">Yes</label>
+                                <label htmlFor="general-disclosure-5-yes">Yes</label>
                                 <input type="radio" id="general-disclosure-5-no" name="external_control" onChange={individualChange} value='No' checked={data.external_control=="No"}/>
-                                <label for="general-disclosure-5-no">No</label>
+                                <label htmlFor="general-disclosure-5-no">No</label>
                             </div>
                             <small className="text-danger">{error.external_control}</small>
                         </div>

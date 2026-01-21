@@ -21,10 +21,10 @@ function ClientCommissionHistory(props) {
                     <tbody>
                     {commissionData.map((data,index) =>
                         <tr>
-                            <td scope="row">{index + 1}</td>
+                            <td>{index + 1}</td>
                             <td>${data.amount}</td>
                             <td>{(data.level !== null) ? data.level : '-' }</td>
-                            <td>{(data.percentage !== null) ? data.percentage : '-' }</td>
+                            <td>{(data.percentage !== null) ? data.percentage : '-'}</td>
                             <td>{data.description}</td>
                             <td>{data.created}</td>
                         </tr>

@@ -256,7 +256,7 @@ function CreateLive(props) {
                                             type.map(val=>(
                                                 (val.type=='live') ? 
                                                 <><input type="radio" id={val.account} name='account' value={val.id} onChange={handleType} />
-                                                <label for={val.account}>PM Financials Live</label></> : null
+                                                <label htmlFor={val.account}>PM Financials Live</label></> : null
                                             ))
                                         }
                                         <br/><small className="text-danger">{error.account_type_id}</small>
@@ -305,7 +305,7 @@ function CreateLive(props) {
                                         data!=null && data.map(val=>(
                                             <div className="form-group col-6 col-sm-4">
                                                 <FormControl type="radio" name="radio-group" id={val.id} onChange={(e)=>selectPlanFunc(e,val.id)} />
-                                                <label for={val.id}>
+                                                <label htmlFor={val.id}>
                                                     <h3 className="mb-1">{val.title}</h3>
                                                     <p className="mb-1"><b>Group......</b>{val.group}</p>
                                                     <p className="mb-1">{val.group_description}</p>

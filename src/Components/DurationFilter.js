@@ -42,7 +42,7 @@ function DurationFilter({ filterData, search, clear, handleFilterDataChanger, ha
             <Col xl={filterData.duration === "custom" ? 4 : 4}>
                 <FormGroup className={`mt-3 mt-xl-2 d-flex flex-wrap justify-content-center justify-content-sm-start ${filterData.duration === "custom" ? "mb-2" : ""}`}>
                     <Button type="submit" className="btn btn-primary me-2 mb-2 mb-sm-0" onClick={(e) => { search(e) }} >Search</Button>
-                    <Button className="btn funding-clear-btn me-2" onClick={(e) => { clear(e) }}>Clear</Button>
+                    <Button className="btn funding-clear-btn" onClick={(e) => { clear(e) }}>Clear</Button>
                     {csvdata &&
                         <CSVLink
                             className='mt-sm-0 mt-2'
@@ -54,7 +54,6 @@ function DurationFilter({ filterData, search, clear, handleFilterDataChanger, ha
                         </CSVLink>
                     }
                 </FormGroup>
-
             </Col>
         </Row>
     )

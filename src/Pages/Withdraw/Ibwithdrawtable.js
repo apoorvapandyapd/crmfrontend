@@ -1,6 +1,5 @@
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
 import { redirectAsync, showClient } from "../../store/clientslice";
 import Pagination from "../../Components/Pagination";
 import { Fragment, useState, useEffect } from "react";
@@ -9,12 +8,13 @@ import PropagateLoader from "react-spinners/PropagateLoader";
 import { Table, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { BackArrowIcon, DeleteIcon } from "../../Components/icons";
 import DurationFilter from "../../Components/DurationFilter";
+import { Link } from "react-router-dom/cjs/react-router-dom.min";
 
 const base_url = process.env.REACT_APP_API_URL;
 const WITHDRAW_API_URL = base_url + "/v1/client/iblist-withdraws";
 const DELETE_WITHDRAW_REQUEST_API = base_url + "/v1/client/delete-withdrawrequest";
-const TBL_SHOW_RECORDS = process.env.TBL_SHOW_RECORDS==null ? 10 : process.env.TBL_SHOW_RECORDS;
-const TBL_PER_PAGE = process.env.TBL_PER_PAGE==null ? 2 : process.env.TBL_PER_PAGE;
+const TBL_SHOW_RECORDS = process.env.TBL_SHOW_RECORDS == null ? 10 : process.env.TBL_SHOW_RECORDS;
+const TBL_PER_PAGE = process.env.TBL_PER_PAGE == null ? 2 : process.env.TBL_PER_PAGE;
 
 const Ibwithdrawtable = (props) => {
 
@@ -142,14 +142,14 @@ const Ibwithdrawtable = (props) => {
     const searchByDate = (e) => {
         fetchData();
         setCurrentPage(1)
-        setPageNumberLimit(TBL_PER_PAGE);
+        // setPageNumberLimit(TBL_PER_PAGE);
         setMaxPageNumberLimit(TBL_PER_PAGE);
         setMinPageNumberLimit(0);
     }
     const clearDate = (e) => {
         fetchData("clr");
         setCurrentPage(1)
-        setPageNumberLimit(TBL_PER_PAGE);
+        // setPageNumberLimit(TBL_PER_PAGE);
         setMaxPageNumberLimit(TBL_PER_PAGE);
         setMinPageNumberLimit(0);
     }
@@ -214,14 +214,14 @@ const Ibwithdrawtable = (props) => {
             if (props.showList === 'ibComWithdrawal') {
                 fetchData({ duration: "current_month", status: "pending" });
                 setCurrentPage(1)
-                setPageNumberLimit(TBL_PER_PAGE);
+                // setPageNumberLimit(TBL_PER_PAGE);
                 setMaxPageNumberLimit(TBL_PER_PAGE);
                 setMinPageNumberLimit(0);
                 setRecordsPerPage(10)
 
             } else if (props.showList === "ibComWithdrawalRequest") {
                 setCurrentPage(1)
-                setPageNumberLimit(2);
+                // setPageNumberLimit(2);
                 setMaxPageNumberLimit(2);
                 setMinPageNumberLimit(0);
                 fetchData({ duration: "current_month", status: "all" });
@@ -230,7 +230,7 @@ const Ibwithdrawtable = (props) => {
         } else if (props.showList === 'all') {
             fetchData({ duration: 'all', status: "pending" });
             setCurrentPage(1)
-            setPageNumberLimit(TBL_PER_PAGE);
+            // setPageNumberLimit(TBL_PER_PAGE);
             setMaxPageNumberLimit(TBL_PER_PAGE);
             setMinPageNumberLimit(0);
             setRecordsPerPage(5)
@@ -273,7 +273,7 @@ const Ibwithdrawtable = (props) => {
                             <>
                             <div className="d-flex flex-wrap justify-content-between align-items-center">
                                     <h3 className="mb-0 d-flex flex-wrap justify-content-between" style={{ alignItems: 'center' }}>
-                                    <Link to="#" onClick={() => props.setShowList('all')} className="back-arrow mr-1">
+                                        <Link to="#" onClick={() => props.setShowList('all')} className="back-arrow mr-1">
                                         <BackArrowIcon width="24" height="24" />
                                         </Link>
                                     <div className="mx-2">Commissions</div>
@@ -292,7 +292,7 @@ const Ibwithdrawtable = (props) => {
                                         }
                                     </div>
                                 </div>
-                            <hr />
+                                <hr />
                             <DurationFilter filterData={filterData} search={searchByDate} clear={clearDate} handleFilterDataChanger={handleFilterDataChanger} handleDurationChanger={handleDurationChanger} />
                             <div className='d-flex flex-wrap'>
                                 <small className="text-danger m-1">{error['from_date']}</small>

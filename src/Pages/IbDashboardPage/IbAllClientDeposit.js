@@ -1,4 +1,4 @@
-import axios from 'axios';
+// import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { PropagateLoader } from 'react-spinners';
 import {redirectAsync, showClient} from '../../store/clientslice';
@@ -7,8 +7,9 @@ import { formatNumberWithCommas, getUniqueList } from '../../Components/util';
 import { Link } from 'react-router-dom';
 import { CsvDownloadIcon, RefatchIcon } from '../../Components/icons';
 import { CSVLink } from "react-csv";
+import { CustomRequest } from '../../Components/RequestService';
 let allIbDeposits = [];
-const DASHBOARD_API_URL = process.env.REACT_APP_API_URL + "/v1/ib/getallibdeposits";
+// const DASHBOARD_API_URL = process.env.REACT_APP_API_URL + "/v1/ib/getallibdeposits";
 
 function IbAllClientDeposit() {
     const dispatch = useDispatch();
@@ -21,35 +22,24 @@ function IbAllClientDeposit() {
     const client = useSelector(showClient);
     async function fetchAllDeposits() {
         setIbDeposits(null);
-        try {
-            const config = {
-                headers: {Authorization: `Bearer ${client.token}`}
-            };
-
-            const bodyParameters = {
-                key: "value"
-            };
-            await axios.post(DASHBOARD_API_URL, bodyParameters, config).then((res) => {
+        let data = {
+            key: "value"
+        };
+        CustomRequest('getallibdeposits', data, client.token, (res) => {
+            if (res?.error) {
+                if (res.error.response.status === 401) {
+                    dispatch(redirectAsync());
+                }
+            } else {
                 if (res.data.status_code === 200) {
                     allIbDeposits = res.data.data.accounts;
                     setIbDeposits(res.data.data.accounts);
                     let cArr = getUniqueList(allIbDeposits);
                     setClientsArr(cArr);
-                    setFilter({search:'', selclient:''});
-                } else if (res.data.status_code === 500) {
-
+                    setFilter({ search: '', selclient: '' });
                 }
-            }).catch((error) => {
-                if (error.response) {
-
-                }
-            });
-        } catch (error) {
-            
-            if (error.response.status === 401) {
-                dispatch(redirectAsync());
             }
-        }
+        });
     }
 
     const clientChangeHandler = (e) => {
@@ -96,7 +86,7 @@ function IbAllClientDeposit() {
         return {
             "Name": `${data.first_name} ${data.last_name}`,
             "Transaction ID": data.transaction_id ?? '-',
-            Amount: data.amount.toLocaleString(data.currency.currency_locale, { style: 'currency', currency: data.currency.currency_code }),
+            Amount: data.amount?.toLocaleString(data.currency.currency_locale, { style: 'currency', currency: data.currency.currency_code }),
             "Final Amount": data.final_deposit_amount != null ? data.final_deposit_amount?.toLocaleString("en-US", { style: 'currency', currency: 'USD' }) : "$0.00",
             Status: data.status,
             Date: data.date
@@ -153,7 +143,7 @@ function IbAllClientDeposit() {
                 <table className="table m-0">
                     <thead>
                     <tr>
-                                            <th scope="col">Name</th>
+                        <th scope="col">Client Name</th>
                         <th scope="col">Transaction ID</th>
                         <th scope="col">Amount</th>
                         <th scope="col">Final Amount</th>
@@ -168,10 +158,10 @@ function IbAllClientDeposit() {
                                 <td >{acc.transaction_id ?? '-'}</td>
                                 <td>
                                     {
-                                        acc.amount.toLocaleString(acc.currency.currency_locale, { style: 'currency', currency: acc.currency.currency_code })
+                                        acc.amount?.toLocaleString(acc.currency.currency_locale, { style: 'currency', currency: acc.currency.currency_code })
                                     }
                                 </td>
-                                <td >{acc.final_deposit_amount != null ? acc.final_deposit_amount?.toLocaleString("en-US", { style: 'currency', currency: 'USD' }) : "$0.00"}</td>
+                                <td >${formatNumberWithCommas(acc.final_deposit_amount)}</td>
                                 <td >{acc.status}</td>
                                 <td >{acc.date}</td>
                         </tr>

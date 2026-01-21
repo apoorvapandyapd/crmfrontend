@@ -1,13 +1,14 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { redirectAsync, showClient } from "../store/clientslice";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
+// import axios from "axios";
 import { Table } from 'react-bootstrap';
 import Innerlayout from '../Components/Innerlayout';
 import { PropagateLoader } from "react-spinners";
+import { CustomRequest } from '../Components/RequestService';
 
-const base_url = process.env.REACT_APP_API_URL;
-const NOTIFICATION_API = base_url + "/v1/client/list-notification";
+// const base_url = process.env.REACT_APP_API_URL;
+// const NOTIFICATION_API = base_url + "/v1/client/list-notification";
 
 function Notification() {
 
@@ -25,31 +26,21 @@ function Notification() {
     // };
 
     async function fetchData() {
-        try {
-            const config = {
-                headers: { Authorization: `Bearer ${client.token}` }
-            };
 
-            const bodyParameters = {};
-            await axios.post(NOTIFICATION_API, bodyParameters, config).then((res)=>{
-                if(res.data.status_code===200){
+        let data = {
+        }
 
+        CustomRequest('list-notification', data, client.token, (res) => {
+            if (res?.error) {
+                if (res.error.response.status === 401) {
+                    dispatch(redirectAsync());
+                }
+            } else {
+                if (res.data.status_code === 200) {
                     setNotification(res.data.data);
                 }
-                else if (res.data.status_code === 500) {
-                    ;
-                }
-            }).catch((error) => {
-                if (error.response) {
-                    console.log(error.response.data.errors);
-                }
-            });
-        } catch (error) {
-            console.error(error);
-            if (error.response.status === 401) {
-                dispatch(redirectAsync());
             }
-        }
+        });
     }
     useEffect(() => {
         fetchData();
@@ -87,7 +78,7 @@ function Notification() {
                         </thead>
                         <tbody>
                         {notification.map((data,i) =>
-                            <tr>
+                            <tr key={i}>
                                 <th scope="row">{i+1}</th>
                                 <td>{data.notification_message}</td>
                                 <td>{data.created_at}</td>

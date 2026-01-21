@@ -1,6 +1,4 @@
-import React, { useState } from 'react';
-import { Image } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import React from 'react';
 
 function SubIbClients(props) {
    

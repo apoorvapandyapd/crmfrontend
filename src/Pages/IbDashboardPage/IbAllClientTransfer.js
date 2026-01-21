@@ -5,8 +5,8 @@ import {redirectAsync, showClient} from '../../store/clientslice';
 import { useDispatch, useSelector } from 'react-redux';
 import { formatNumberWithCommas, getUniqueList } from '../../Components/util';
 import { Link } from 'react-router-dom';
-import { CsvDownloadIcon, RefatchIcon } from '../../Components/icons';
 import { CSVLink } from "react-csv";
+import { CsvDownloadIcon, RefatchIcon } from '../../Components/icons';
 let allIbTransfer = [];
 const DASHBOARD_API_URL = process.env.REACT_APP_API_URL + "/v1/ib/transfer-list";
 
@@ -96,7 +96,7 @@ function IbAllClientTransfer() {
             "Name": `${data.first_name} ${data.last_name}`,
             "Transaction ID": data.transaction_id ?? '-',
             Type: data.type,
-            Amount: data.amount.toLocaleString("en-US", { style: 'currency', currency: 'USD' }),
+            Amount: data.amount?.toLocaleString("en-US", { style: 'currency', currency: 'USD' }),
             Status: data.status,
             Date: data.date
         }
@@ -134,8 +134,8 @@ function IbAllClientTransfer() {
                                 <option key={i} value={cl.clientid}>{cl.first_name} {cl.last_name}</option>
                             )}       
                         </select>
-                                    <Link to="#" onClick={fetchAllTransfer} className="me-2">
-                                        <RefatchIcon width="24" height="24" />
+                                    <Link to="#" onClick={fetchAllTransfer} className="me-2"> 
+                            <RefatchIcon width="24" height="24" />
                                     </Link>
                                     <CSVLink
                                         data={csvdata}
@@ -152,7 +152,7 @@ function IbAllClientTransfer() {
                     <table className="table m-0">
                         <thead>
                         <tr>
-                                            <th scope="col">Name</th>
+                            <th scope="col">Client Name</th>
                             <th scope="col">Transaction ID</th>
                             <th scope="col">Type</th>
                             <th scope="col">Amount</th>

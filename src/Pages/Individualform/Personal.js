@@ -245,11 +245,11 @@ function Personal({setActiveTab, activeTab}) {
             <div className="d-flex">
                 <div className="form-group me-3">
                     <input style={{ marginRight: '4px' }} type="radio" name='base_currency' id="usd" onChange={individualChange} value='USD' checked />
-                    <label className="mr-3" for="usd">USD</label>
+                    <label className="mr-3" htmlFor="usd">USD</label>
                 </div>
                 {/* <div className="form-group">
                     <input style={{ marginRight: '4px' }} type="radio" name='base_currency' id="eur" onChange={individualChange} value='EUR' checked={data.base_currency=="EUR"}/>
-                    <label className="mr-3" for="eur">EUR</label>
+                    <label className="mr-3" htmlFor="eur">EUR</label>
                 </div> */}
             </div>
             <small className="text-danger">{error.base_currency}</small>
@@ -372,7 +372,7 @@ function Personal({setActiveTab, activeTab}) {
                         <label>Country*</label>
                         <Select
                             name='country'
-                            // defaultValue={{ value: data.country, label: data.country }}
+                            defaultValue={{ value: data.country, label: data.country }}
                             value={{ value: data.country, label: data.country }}
                             onChange={selectChange}
                             options={options}
@@ -394,9 +394,9 @@ function Personal({setActiveTab, activeTab}) {
                         <label>Are you a USA citizen, Green Card holder or USA resident for tax purpose?</label>
                         <div className="form-group mt-2 custom_radio">
                             <input type="radio" id="usa-tax-yes" name="usa_citizen" onChange={individualChange} value='Yes' checked={data.usa_citizen=="Yes"}/>
-                            <label for="usa-tax-yes">Yes</label>
+                            <label htmlFor="usa-tax-yes">Yes</label>
                             <input type="radio" id="usa-tax-no" name="usa_citizen" onChange={individualChange} value='No' checked={data.usa_citizen=="No"}/>
-                            <label for="usa-tax-no">No</label>
+                            <label htmlFor="usa-tax-no">No</label>
                         </div>
                     </div>
                     <small className="text-danger">{error.usa_citizen}</small>
@@ -406,9 +406,9 @@ function Personal({setActiveTab, activeTab}) {
                         <label>Are you a Politically Exposed Person (PEP) or related to a PEP?</label>
                         <div className="form-group mt-2 custom_radio">
                             <input type="radio" id="pep-yes" name="pep_related" onChange={individualChange} value='Yes' checked={data.pep_related=="Yes"}/>
-                            <label for="pep-yes">Yes</label>
+                            <label htmlFor="pep-yes">Yes</label>
                             <input type="radio" id="pep-no" name="pep_related" onChange={individualChange} value='No' checked={data.pep_related=="No"}/>
-                            <label for="pep-no">No</label>
+                            <label htmlFor="pep-no">No</label>
                         </div>
                     </div>
                     <small className="text-danger">{error.pep_related}</small>

@@ -4,11 +4,12 @@ import { Link, useHistory } from 'react-router-dom';
 import { useParams } from "react-router-dom";
 import { FormControl, FormGroup, Button, Modal } from "react-bootstrap";
 import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios';
+// import axios from 'axios';
 import { redirectAsync, showClient } from "../../store/clientslice";
 import AlertMessage from "../AlertMessage";
 import { PropagateLoader } from "react-spinners";
 import { BackArrowIcon } from "../../Components/icons";
+import { CustomRequest } from "../../Components/RequestService";
 
 const base_url = process.env.REACT_APP_API_URL;
 const SHOWPASSWORD_API_URL = base_url + "/v1/client/show-mtpassword";
@@ -38,47 +39,35 @@ function ChangeMtPass(){
         event.preventDefault();
         setAlertDiv(false);
         
-        try {
-            const config = {
-                headers: { Authorization: `Bearer ${client.token}` }
-            };
+        let data = {
+            "account_id": id,
+            "main_password": mainPassword,
+            "confirm_main_password": confirmMainPassword,
 
-            let formData = new FormData();
-            formData.append("account_id",id);
-            // formData.append("old_main_password",oldMainPassword);
-            formData.append("main_password",mainPassword);
-            formData.append("confirm_main_password",confirmMainPassword);
+        }
 
-//            formData.append("invest_password", data.invest_password);
-            
+        CustomRequest('update-mtpassword', data, client.token, (res) => {
+            if (res?.error) {
+                setLoading(false);
+                let err = res?.error.response.data.errors;
+                setError(err);
+                if (res.error.response.status === 401) {
+                    dispatch(redirectAsync());
+                }
+            } else {
 
-            await axios.post(MTACCOUNT_CHANGE_PASSWORD_API_URL, formData, config).then(response=>{
-
-                if(response.data.status_code === 200){
+                if (res.data.status_code === 200) {
                     // setMtPasswrod(true);
                     setLoading(false);
                     history.push('/list/trading-accounts');
                 }
-                else if(response.data.status_code === 500){
+                else if (res.data.status_code === 500) {
                     setLoading(false);
-                    setErrorMesssage(response.data.message);
+                    setErrorMesssage(res.data.message);
                     setAlertDiv(true);
                 }
-            }).catch((error)=>{
-                if (error.response) {
-                    setLoading(false);
-                    let err = error.response.data.errors;
-                    setError(err);
-                }
-            });
-            
-        } catch (error) {
-            console.error(error);
-            if (error.response.status === 401) {
-                setLoading(false);
-                dispatch(redirectAsync());
             }
-        }
+        });
     }
 
     const handleClose=()=>{
@@ -104,43 +93,31 @@ function ChangeMtPass(){
         setLoading(true);
 
         const { password } = event.target.elements;
+        let data = {
+            "password": password.value,
+            "login": login
+        }
 
-        try {
-            const config = {
-                headers: { Authorization: `Bearer ${client.token}` }
-            };
 
-            let formData = new FormData();
-            formData.append("password", password.value);
-            formData.append("login", login);
-            
-            await axios.post(SHOWPASSWORD_API_URL, formData, config).then(response => {
-
-                if(response.data.status_code === 200){
-
+        CustomRequest('show-mtpassword', data, client.token, (res) => {
+            if (res?.error) {
+                console.log(res.error);
+                if (res.error.response.status === 401) {
+                    dispatch(redirectAsync());
+                }
+            } else {
+                if (res.data.status_code === 200) {
                     setShowPwd(false);
                     newMtPasswordSubmitHandler(event);
                 }
-                else if(response.data.status_code === 500){
+                else if (res.data.status_code === 500) {
                     setLoading(false);
-                    setErrorMesssage(response.data.message);
+                    setErrorMesssage(res.data.message);
                     setAlertDiv(true);
                 }
-
-            }).catch((error)=>{
-                if (error.response) {
-                    setLoading(false);
-                    let err = error.response.data.errors;
-                    setErrorMesssage(err);
-                }
-            });
-        } catch (error) {
-            console.error(error);
-            if (error.response.status === 401) {
-                setLoading(false);
-                dispatch(redirectAsync());
             }
-        }
+        });
+
     }
     
 
@@ -175,29 +152,36 @@ function ChangeMtPass(){
                                     <small className="text-danger">{error.old_main_password}</small>
                                 </FormGroup> */}
                                 <FormGroup className="mb-3">
-                                    <FormControl type="password" name="main_password" placeholder="Main Password" />
+                                    <FormControl type="password" name="main_password" placeholder="Main Password"/>
                                     <small className="text-danger">{error.main_password}</small>
                                 </FormGroup>
                                 <FormGroup className="mb-3">
-                                    <FormControl type="password" name="confirm_main_password" placeholder="Confirm Main Password" />
+                                    <FormControl type="password" name="confirm_main_password"
+                                                 placeholder="Confirm Main Password"/>
                                     <small className="text-danger">{error.confirm_main_password}</small>
                                 </FormGroup>
 
                                 {/* <FormGroup className="mb-3">
                                     <FormControl type="password" name="invest_password" placeholder="Investor Password" />
                                 </FormGroup> */}
+
+                                <span><b>Note :</b> <span>The main password must contain at least two of three types of characters (lower case, upper case and digits). </span></span><br/>
+                                <span>Ex. : <span><b>AniTes@MAINyMI122!</b></span> </span><br /><br /><br />
+                                
                                 <div className="d-flex justify-content-center justify-content-sm-between align-items-center flex-wrap">
                                     <Link to="/list/trading-accounts" className="order-5 order-sm-0">&laquo; Back</Link>
                                     {/* <Button type="submit" className="btn btn-primary float-end btn btn-primary mb-3 mb-sm-0 order-1 order-sm-0">Change Password</Button> */}
-                                    <Button type="submit" className="btn btn-primary float-end btn btn-primary mb-3 mb-sm-0 order-1 order-sm-0">Change Password</Button>
+                                    <Button type="submit"
+                                            className="btn btn-primary float-end btn btn-primary mb-3 mb-sm-0 order-1 order-sm-0">Change
+                                        Password</Button>
                                 </div>
                             </form>
                         </div>
                     </div>
                 </div>
-                <Modal show={showPwd} onHide={(e)=>handleClose(e)} centered animation={false}>
+                    <Modal show={showPwd} onHide={(e) => handleClose(e)} centered animation={false}>
                         <form onSubmit={showPasswordForm}>
-                        <Modal.Header>
+                            <Modal.Header>
                         <Modal.Title>
                         Verification Password
                         </Modal.Title>

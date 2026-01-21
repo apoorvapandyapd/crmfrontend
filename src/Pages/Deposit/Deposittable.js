@@ -13,7 +13,7 @@ import DurationFilter from "../../Components/DurationFilter";
 const base_url = process.env.REACT_APP_API_URL;
 const DEPOSIT_API_URL = base_url + "/v1/client/list-deposit";
 const DELETE_DEPOSIT_REQUEST_API = base_url + "/v1/client/delete-depositrequest";
-const TBL_SHOW_RECORDS = process.env.TBL_SHOW_RECORDS==null ? 10 : process.env.TBL_SHOW_RECORDS;
+const TBL_SHOW_RECORDS = process.env.TBL_SHOW_RECORDS == null ? 10 : process.env.TBL_SHOW_RECORDS;
 // const TBL_PER_PAGE = process.env.TBL_PER_PAGE == null ? 2 : process.env.TBL_PER_PAGE;
 const UPLOAD_PROOF_API = base_url + "/v1/client/upload-proof";
 const DELETE_PROOF_API = base_url + "/v1/client/delete-proof";
@@ -45,13 +45,13 @@ const Deposittable = (props) => {
 
 
     // const [editImagePreview, setEditImagePreview] = useState(null);
-    const [editPwdState,setEditPwdState] = useState(false);
-    const [pwdState,setPwdState] = useState(false);
+    const [editPwdState, setEditPwdState] = useState(false);
+    const [pwdState, setPwdState] = useState(false);
 
     const dispatch = useDispatch();
 
 
-    const deleteRequest=async(e,id)=>{
+    const deleteRequest = async (e, id) => {
         e.preventDefault();
         await Swal.fire({
             title: "Are you sure, you want to delete this ?",
@@ -67,48 +67,48 @@ const Deposittable = (props) => {
                 confirmButton: 'submit-button confirm',
             },
 
-          })
-          .then((willDelete) => {
-              if (willDelete.isConfirmed) {
-                let formData = new FormData();
-                formData.append("id",id);
+        })
+            .then((willDelete) => {
+                if (willDelete.isConfirmed) {
+                    let formData = new FormData();
+                    formData.append("id", id);
 
-                try {
-                    const config = {
-                        headers: { Authorization: `Bearer ${client.token}` }
-                    };
+                    try {
+                        const config = {
+                            headers: { Authorization: `Bearer ${client.token}` }
+                        };
 
-                     axios.post(DELETE_DEPOSIT_REQUEST_API, formData, config).then((res)=>{
-                        if(res.data.status_code===200){
+                        axios.post(DELETE_DEPOSIT_REQUEST_API, formData, config).then((res) => {
+                            if (res.data.status_code === 200) {
 
-                            Swal.fire("", "Record deleted successfully!", "success");
-                            fetchData();
-                        } else if (res.data.status_code === 500) {
-                            Swal.fire({
-                                icon: 'error',
-                                text: res.data.message,
-                                confirmButtonText: 'OK',
-                            });
-                            fetchData();
-                            props.refetchWalletBalanceData();
+                                Swal.fire("", "Record deleted successfully!", "success");
+                                fetchData();
+                            } else if (res.data.status_code === 500) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    text: res.data.message,
+                                    confirmButtonText: 'OK',
+                                });
+                                fetchData();
+                                props.refetchWalletBalanceData();
+                            }
+
+                        }).catch((error) => {
+                            if (error.response) {
+                                console.log(error.response.data.errors);
+
+                            }
+                        });
+                    } catch (error) {
+                        console.error(error);
+                        if (error.response.status === 401) {
+
+                            dispatch(redirectAsync());
                         }
 
-                    }).catch((error) => {
-                        if (error.response) {
-                            console.log(error.response.data.errors);
-
-                        }
-                    });
-                } catch (error) {
-                    console.error(error);
-                    if (error.response.status === 401) {
-
-                        dispatch(redirectAsync());
                     }
-                    
                 }
-            }
-        });
+            });
     }
 
     const [currentPage, setCurrentPage] = useState(1);
@@ -125,8 +125,8 @@ const Deposittable = (props) => {
     const currentRecords = depositData !== null && depositData?.slice(indexOfFirstRecord, indexOfLastRecord);
     const nPages = depositData !== null && Math.ceil(depositData.length / recordsPerPage);
 
-    
-    
+
+
 
     const handleProof = (e) => {
         e.preventDefault();
@@ -397,13 +397,14 @@ const Deposittable = (props) => {
             "Record ID": data.id,
             "Transaction ID": data.transaction_id ?? '-',
             "Payment Method": data.payment_method,
-            Amount: data.amount.toLocaleString(data.currency.currency_locale, { style: 'currency', currency: data.currency.currency_code }),
+            Amount: data.amount?.toLocaleString(data.currency.currency_locale, { style: 'currency', currency: data.currency.currency_code }),
             "Final Amount": data.final_amount != null ? data.final_amount?.toLocaleString("en-US", { style: 'currency', currency: 'USD' }) : "$0.00",
             Status: data.status,
             Comment: data.comment != null ? data.comment : "-",
             Date: data.created_at
         }
     })
+
 
     return (
         <Fragment>
@@ -418,38 +419,38 @@ const Deposittable = (props) => {
                 />
                     : <>
                         <div className={`table-last-col ${location.pathname === "/mywallet" && 'card-body'}`}>
-                            {props.showList === 'all' && 
-                            <div className="title d-flex justify-content-between flex-wrap">
-                                <h3>Pending Deposits</h3>
-                                <div className="mb-3 mb-md-0">Total Amount: <span className="text-success">  {totalStatusAmt && ` $${totalStatusAmt?.pendingStatus.amount.toFixed(2)}  (${totalStatusAmt?.pendingStatus.count}) `}</span>
-                                </div>
-                            </div>}
+                            {props.showList === 'all' &&
+                                <div className="title d-flex justify-content-between flex-wrap">
+                                    <h3>Pending Deposits</h3>
+                                    <div className="mb-3 mb-md-0">Total Amount: <span className="text-success">  {totalStatusAmt && ` $${totalStatusAmt?.pendingStatus.amount.toFixed(2)}  (${totalStatusAmt?.pendingStatus.count}) `}</span>
+                                    </div>
+                                </div>}
                             {(props.showList === 'deposit' || props.showList === "depositRequest") &&
-                                <> 
+                                <>
                                 {location.pathname === "/mywallet" &&
                                     <>
                                     <div className="d-flex flex-wrap justify-content-between">
-                                    <h3 className="mb-0 d-flex flex-wrap justify-content-between" style={{ alignItems: 'center' }}>
-                                        <OverlayTrigger placement="top" overlay={<Tooltip>Back To Wallet</Tooltip>}>
-                                            <Link to="#" onClick={() => props.setShowList('all')} className="back-arrow mr-1">
-                                                <BackArrowIcon width="24" height="24" />
-                                            </Link>
-                                        </OverlayTrigger>
-                                        <div className="mx-2">Deposits</div>
-                                    </h3>
-                                    <div className="d-flex flex-wrap justify-content-between align-items-center">
-                                        {
-                                            filterData.status === "pending" && <div className="me-2">Total Pending Amount: <span className="text-success">{totalStatusAmt && ` $${totalStatusAmt?.pendingStatus.amount.toFixed(2)}  (${totalStatusAmt?.pendingStatus.count}) `}</span></div>
+                                        <h3 className="mb-0 d-flex flex-wrap justify-content-between" style={{ alignItems: 'center' }}>
+                                            <OverlayTrigger placement="top" overlay={<Tooltip>Back To Wallet</Tooltip>}>
+                                                <Link to="#" onClick={() => props.setShowList('all')} className="back-arrow mr-1">
+                                                    <BackArrowIcon width="24" height="24" />
+                                                </Link>
+                                            </OverlayTrigger>
+                                            <div className="mx-2">Deposits</div>
+                                        </h3>
+                                        <div className="d-flex flex-wrap justify-content-between align-items-center">
+                                            {
+                                                filterData.status === "pending" && <div className="me-2">Total Pending Amount: <span className="text-success">{totalStatusAmt && ` $${totalStatusAmt?.pendingStatus.amount.toFixed(2)}  (${totalStatusAmt?.pendingStatus.count}) `}</span></div>
 
-                                        }{
-                                            filterData.status === "approved" && <div>Total Approved Amount: <span className="text-success">{totalStatusAmt && ` $${totalStatusAmt?.approvedStatus.amount.toFixed(2)}  (${totalStatusAmt?.approvedStatus.count}) `}</span></div>
-                                        }{
-                                            filterData.status === "all" && <>
-                                                <div className="me-2">Total Pending Amount: <span className="text-success">{totalStatusAmt && ` $${totalStatusAmt?.pendingStatus.amount.toFixed(2)}  (${totalStatusAmt?.pendingStatus.count}) `}</span></div>
-                                                <div>Total Approved Amount: <span className="text-success">{totalStatusAmt && ` $${totalStatusAmt?.approvedStatus.amount.toFixed(2)}  (${totalStatusAmt?.approvedStatus.count}) `}</span></div>
-                                            </>
-                                        }
-                                    </div>
+                                            }{
+                                                filterData.status === "approved" && <div>Total Approved Amount: <span className="text-success">{totalStatusAmt && ` $${totalStatusAmt?.approvedStatus.amount.toFixed(2)}  (${totalStatusAmt?.approvedStatus.count}) `}</span></div>
+                                            }{
+                                                filterData.status === "all" && <>
+                                                    <div className="me-2">Total Pending Amount: <span className="text-success">{totalStatusAmt && ` $${totalStatusAmt?.pendingStatus.amount.toFixed(2)}  (${totalStatusAmt?.pendingStatus.count}) `}</span></div>
+                                                    <div>Total Approved Amount: <span className="text-success">{totalStatusAmt && ` $${totalStatusAmt?.approvedStatus.amount.toFixed(2)}  (${totalStatusAmt?.approvedStatus.count}) `}</span></div>
+                                                </>
+                                            }
+                                        </div>
                                     </div>
                                     <hr />
                                     </>
@@ -459,7 +460,7 @@ const Deposittable = (props) => {
                                     <small className="text-danger m-1">{error['from_date']}</small>
                                     <small className="text-danger m-1">{error['to_date']}</small>
                                 </div>
-                            </>
+                                </>
                             }
                             <div className="table-responsive">
                                 <Table className="table m-0 align-middle">
@@ -488,12 +489,11 @@ const Deposittable = (props) => {
                                                 {/* <td>{deposit.destination}</td> */}
                                                 {/* <td>${deposit.amount}</td> */}
                                                 <td>
-                                                {
-                                                    deposit.amount.toLocaleString(deposit.currency.currency_locale, { style: 'currency', currency: deposit.currency.currency_code })
-                                                }
+                                                    {
+                                                        deposit.amount?.toLocaleString(deposit.currency.currency_locale, { style: 'currency', currency: deposit.currency.currency_code })
+                                                    }
                                                 </td>
-                                                <td>{deposit.final_amount != null ? deposit.final_amount?.toLocaleString("en-US", { style: 'currency', currency: 'USD' }) : "$0.00"}</td>
-
+                                                <td>${deposit.final_amount ?? 0}</td>
                                                 {/* <td>{deposit.status === 'approved' ? <Link to={"/payment/"+deposit.transaction_id} className="btn btn-primary btn-sm">Pay Now</Link> : deposit.status }</td> */}
                                                 <td>{deposit.status === 'Approved' ? 'Approved' : deposit.status}</td>
                                                 <td>{deposit.comment !== null ? deposit.comment : '-'}</td>

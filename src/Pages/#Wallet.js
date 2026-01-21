@@ -1,5 +1,7 @@
 import { Fragment, useState, useEffect } from "react";
 import Innerlayout from "../Components/Innerlayout";
+import Accountstats from "./Accountverify/Accountstats";
+import Documents from "./Accountverify/Documents";
 import { redirectAsync, showClient } from "../store/clientslice";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios"
@@ -50,7 +52,6 @@ const Wallet = () => {
             }));
 
         } catch (error) {
-            console.error(error);
             if(error.response.status==401){
                 dispatch(redirectAsync());
             }
@@ -72,7 +73,8 @@ const Wallet = () => {
     const indexOfLastRecord = currentPage * recordsPerPage;
     const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
     const currentRecords = listData!==null && listData.slice(indexOfFirstRecord, indexOfLastRecord);
-    const nPages = Math.ceil(listData !== null && listData.length / recordsPerPage);
+    const nPages = Math.ceil(listData!==null && listData.length / recordsPerPage);
+
 
     //---pagination over
 
@@ -115,20 +117,6 @@ const Wallet = () => {
                 {
                     (client.asIB==false || client.asIB=='both') ?
                     <div className="row">
-                        {/* <div className="col-sm-6 col-lg-6 col-xl-3">
-                            <div className="card-body account-details-box">
-                                <span className="icon"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M8.25341 10.4133C7.93341 10.4133 7.64007 10.2666 7.44007 9.99994C7.21341 9.69327 7.18674 9.29323 7.36007 8.9599C7.58674 8.50656 7.90674 8.0666 8.32007 7.6666L12.6534 3.31992C14.8667 1.11992 18.4667 1.11992 20.6801 3.31992L23.0134 5.69329C24.0001 6.66663 24.6001 7.97329 24.6667 9.35996C24.6801 9.66663 24.5601 9.95993 24.3334 10.1599C24.1067 10.3599 23.8001 10.4533 23.5067 10.3999C23.2401 10.3599 22.9601 10.3466 22.6667 10.3466H9.33341C9.01341 10.3466 8.70674 10.3733 8.40007 10.4133C8.36007 10.4133 8.30674 10.4133 8.25341 10.4133ZM10.4801 8.33327H22.4267C22.2534 7.87994 21.9734 7.46661 21.6001 7.09328L19.2534 4.71991C17.8267 3.30657 15.4934 3.30657 14.0534 4.71991L10.4801 8.33327Z" fill="#4410AD"/>
-                                    <path d="M6.66668 31.6667C4.45334 31.6667 2.37334 30.4933 1.25334 28.5867C0.653344 27.6267 0.333344 26.4933 0.333344 25.3333C0.333344 21.84 3.17334 19 6.66668 19C10.16 19 13 21.84 13 25.3333C13 26.4933 12.68 27.6267 12.08 28.6C10.96 30.4934 8.88001 31.6667 6.66668 31.6667ZM6.66668 21C4.28001 21 2.33334 22.9467 2.33334 25.3333C2.33334 26.12 2.54668 26.8933 2.96001 27.56C3.74668 28.8933 5.13334 29.6667 6.66668 29.6667C8.20001 29.6667 9.58668 28.88 10.3733 27.5733C10.7867 26.8933 11 26.1333 11 25.3333C11 22.9467 9.05334 21 6.66668 21Z" fill="#4410AD"/>
-                                    <path d="M8.65302 26.3066H4.67969C4.13302 26.3066 3.67969 25.8533 3.67969 25.3066C3.67969 24.76 4.13302 24.3066 4.67969 24.3066H8.66635C9.21302 24.3066 9.66635 24.76 9.66635 25.3066C9.66635 25.8533 9.21302 26.3066 8.65302 26.3066Z" fill="#4410AD"/>
-                                    <path d="M6.66666 28.3466C6.11999 28.3466 5.66666 27.8933 5.66666 27.3466V23.36C5.66666 22.8133 6.11999 22.36 6.66666 22.36C7.21332 22.36 7.66666 22.8133 7.66666 23.36V27.3466C7.66666 27.9066 7.21332 28.3466 6.66666 28.3466Z" fill="#4410AD"/>
-                                    <path d="M22.6667 30.3334H10.1733C9.74665 30.3334 9.37332 30.0667 9.22665 29.6801C9.07998 29.2801 9.19998 28.84 9.51998 28.5734C9.83998 28.3067 10.1333 27.96 10.3467 27.5867C10.7733 26.9067 10.9867 26.1334 10.9867 25.3467C10.9867 22.9601 9.03998 21.0134 6.65332 21.0134C5.41332 21.0134 4.22665 21.5467 3.39998 22.4934C3.11998 22.8 2.67998 22.9201 2.29332 22.7734C1.90665 22.6267 1.63998 22.2534 1.63998 21.84V16C1.63998 11.8934 4.17332 8.92005 8.10665 8.42672C8.46665 8.37338 8.87998 8.33337 9.30665 8.33337H22.64C22.96 8.33337 23.3733 8.3467 23.8 8.41337C27.7333 8.8667 30.3067 11.8534 30.3067 16V22.6667C30.3333 27.2534 27.2533 30.3334 22.6667 30.3334ZM12.24 28.3334H22.6667C26.1067 28.3334 28.3333 26.1067 28.3333 22.6667V16C28.3333 12.88 26.5067 10.7333 23.5467 10.3867C23.2267 10.3333 22.9467 10.3334 22.6667 10.3334H9.33332C9.01332 10.3334 8.70665 10.36 8.39998 10.4C5.46665 10.7734 3.66665 12.9067 3.66665 16V19.7601C4.57332 19.2667 5.61332 19 6.66665 19C10.16 19 13 21.84 13 25.3334C13 26.3867 12.7333 27.4267 12.24 28.3334Z" fill="#4410AD"/>
-                                    <path d="M29.3333 23H25.3333C23.3067 23 21.6667 21.36 21.6667 19.3333C21.6667 17.3066 23.3067 15.6666 25.3333 15.6666H29.3333C29.88 15.6666 30.3333 16.12 30.3333 16.6666C30.3333 17.2133 29.88 17.6666 29.3333 17.6666H25.3333C24.4133 17.6666 23.6667 18.4133 23.6667 19.3333C23.6667 20.2533 24.4133 21 25.3333 21H29.3333C29.88 21 30.3333 21.4533 30.3333 22C30.3333 22.5466 29.88 23 29.3333 23Z" fill="#4410AD"/>
-                                    </svg>                            
-                                </span>
-                                <h2><span>Wallet Balance</span> ${data!==null && data.accountBalance}</h2>
-                            </div>
-                        </div> */}
                         <div className="col-sm-6 col-lg-6 col-xl-3">
                             <div className="card-body account-details-box">
                                 <span className="icon"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -140,7 +128,7 @@ const Wallet = () => {
                                     <path d="M29.3333 23H25.3333C23.3067 23 21.6667 21.36 21.6667 19.3333C21.6667 17.3066 23.3067 15.6666 25.3333 15.6666H29.3333C29.88 15.6666 30.3333 16.12 30.3333 16.6666C30.3333 17.2133 29.88 17.6666 29.3333 17.6666H25.3333C24.4133 17.6666 23.6667 18.4133 23.6667 19.3333C23.6667 20.2533 24.4133 21 25.3333 21H29.3333C29.88 21 30.3333 21.4533 30.3333 22C30.3333 22.5466 29.88 23 29.3333 23Z" fill="#4410AD"/>
                                     </svg>                            
                                 </span>
-                                <h2><span>Deposit</span> ${data!==null && data.deposit}</h2>
+                                <h2><span>Deposit</span> ${data!==null && data.deposit.toLocaleString()}</h2>
                             </div>
                         </div>
                         <div className="col-sm-6 col-lg-6 col-xl-3">
@@ -156,7 +144,7 @@ const Wallet = () => {
                                     <path d="M11.0403 31.6666C10.787 31.6666 10.5336 31.5733 10.3336 31.3733C9.94697 30.9866 9.94697 30.3465 10.3336 29.9599L11.2536 29.04L10.3336 28.12C9.94697 27.7333 9.94697 27.0933 10.3336 26.7066C10.7203 26.32 11.3603 26.32 11.747 26.7066L13.3736 28.3333C13.7603 28.7199 13.7603 29.3599 13.3736 29.7466L11.747 31.3733C11.5603 31.5733 11.2936 31.6666 11.0403 31.6666Z" fill="#4410AD"/>
                                     </svg>                            
                                 </span>
-                                <h2><span>Withdraw</span> ${data!==null && data.withdraw}</h2>
+                                <h2><span>Withdraw</span> ${data!==null && data.withdraw.toLocaleString()}</h2>
                             </div>
                         </div>
                         <div className="col-sm-6 col-lg-6 col-xl-3">
@@ -168,7 +156,7 @@ const Wallet = () => {
                                     <path d="M18.6667 17H9.33333C8.78667 17 8.33333 16.5467 8.33333 16C8.33333 15.4533 8.78667 15 9.33333 15H18.6667C19.2133 15 19.6667 15.4533 19.6667 16C19.6667 16.5467 19.2133 17 18.6667 17Z" fill="#4410AD"/>
                                     </svg>
                                 </span>
-                                <h2><span>Wallet To MT5</span> ${data!==null && data.wallet_mt}</h2>
+                                <h2><span>Wallet To MT5</span> ${data!==null && data.wallet_mt.toLocaleString()}</h2>
                             </div>
                         </div>
                         <div className="col-sm-6 col-lg-6 col-xl-3">
@@ -180,14 +168,14 @@ const Wallet = () => {
                                     <path d="M18.6667 17H9.33333C8.78667 17 8.33333 16.5467 8.33333 16C8.33333 15.4533 8.78667 15 9.33333 15H18.6667C19.2133 15 19.6667 15.4533 19.6667 16C19.6667 16.5467 19.2133 17 18.6667 17Z" fill="#4410AD"/>
                                     </svg>
                                 </span>
-                                <h2><span>MT5 To Wallet</span> ${data!==null && data.mt_wallet}</h2>
+                                <h2><span>MT5 To Wallet</span> ${data!==null && data.mt_wallet.toLocaleString()}</h2>
                             </div>
                         </div>
                     </div> : null
                 }
                 <div className="row align-items-center mt-32">
                     <div className="col-sm-6 col-lg-6 mb-3 mb-sm-0">
-                        <h2 className="mb-0">Wallet Balance: ${data!==null && data.account_balance}</h2>
+                        <h2 className="mb-0">Wallet Balance: ${data!==null && data.account_balance.toLocaleString()}</h2>
                     </div>
                     <div className="col-sm-6 col-lg-6 ms-auto">
                         <Link to="/create/payment/method" className="btn btn-primary float-end">Add Payment Method</Link>
@@ -206,23 +194,24 @@ const Wallet = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                    {currentRecords.length === 0 ? <tr><td colspan="4">No records found</td></tr> : currentRecords.map((data, i) =>
-                                        <tr>
-                                            <th scope="row">{i + 1}</th>
-                                            <td>{data.payment_name}</td>
-                                            {/* <td>{data.payment_type}</td> */}
-                                            <td>{checkUserId(data)}</td>
-                                            <td>
-                                                <Link to={{ pathname: '/edit/payment/method', state: { payment_id: data.id } }} className="edit-icon">
-                                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M11 2H9C4 2 2 4 2 9V15C2 20 4 22 9 22H15C20 22 22 20 22 15V13" stroke="#0B0B16" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                                        <path d="M16.0399 3.02001L8.15988 10.9C7.85988 11.2 7.55988 11.79 7.49988 12.22L7.06988 15.23C6.90988 16.32 7.67988 17.08 8.76988 16.93L11.7799 16.5C12.1999 16.44 12.7899 16.14 13.0999 15.84L20.9799 7.96001C22.3399 6.60001 22.9799 5.02001 20.9799 3.02001C18.9799 1.02001 17.3999 1.66001 16.0399 3.02001Z" stroke="#0B0B16" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
-                                                        <path d="M14.9102 4.15002C15.5802 6.54002 17.4502 8.41002 19.8502 9.09002" stroke="#0B0B16" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
-                                                    </svg>
-                                                </Link>
-                                            </td>
-                                        </tr>
-                                    )}
+                            {
+                                currentRecords.map((data,i) =>
+                                <tr>
+                                    <th scope="row">{i+1}</th>
+                                    <td>{data.payment_name}</td>
+                                    {/* <td>{data.payment_type}</td> */}
+                                    <td>{checkUserId(data)}</td>                                    
+                                    <td>
+                                        <Link to={{ pathname:'/edit/payment/method', state:{payment_id:data.id} }} className="edit-icon">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M11 2H9C4 2 2 4 2 9V15C2 20 4 22 9 22H15C20 22 22 20 22 15V13" stroke="#0B0B16" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                        <path d="M16.0399 3.02001L8.15988 10.9C7.85988 11.2 7.55988 11.79 7.49988 12.22L7.06988 15.23C6.90988 16.32 7.67988 17.08 8.76988 16.93L11.7799 16.5C12.1999 16.44 12.7899 16.14 13.0999 15.84L20.9799 7.96001C22.3399 6.60001 22.9799 5.02001 20.9799 3.02001C18.9799 1.02001 17.3999 1.66001 16.0399 3.02001Z" stroke="#0B0B16" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+                                        <path d="M14.9102 4.15002C15.5802 6.54002 17.4502 8.41002 19.8502 9.09002" stroke="#0B0B16" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+                                        </svg>
+                                        </Link>
+                                    </td>
+                                </tr>
+                            )}
                             </tbody>
                         </Table>
                         {

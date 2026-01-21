@@ -10,8 +10,8 @@ import { BackArrowIcon } from "../../Components/icons";
 import DurationFilter from "../../Components/DurationFilter";
 const base_url = process.env.REACT_APP_API_URL;
 const TRANSFER_API_URL = base_url + "/v1/client/list-mttranser";
-const TBL_SHOW_RECORDS = process.env.TBL_SHOW_RECORDS==null ? 10 : process.env.TBL_SHOW_RECORDS;
-const TBL_PER_PAGE = process.env.TBL_PER_PAGE==null ? 2 : process.env.TBL_PER_PAGE;
+const TBL_SHOW_RECORDS = process.env.TBL_SHOW_RECORDS == null ? 10 : process.env.TBL_SHOW_RECORDS;
+const TBL_PER_PAGE = process.env.TBL_PER_PAGE == null ? 2 : process.env.TBL_PER_PAGE;
 
 const Transfertable = (props) => {
 
@@ -213,77 +213,77 @@ const Transfertable = (props) => {
                     data-testid="loader"
                 /> : <>
                         <div className={`table-last-col ${location.pathname === "/mywallet" && 'card-body'}`}>
-                            {props.showList === "all" && 
-                            <div className="transfer-title d-flex mb-3 flex-wrap justify-content-between align-items-center">
-                                <h3 className="mb-0">Transfers</h3>
-                                <div className="d-flex justify-content-between align-items-center flex-wrap">
+                            {props.showList === "all" &&
+                                <div className="transfer-title d-flex mb-3 flex-wrap justify-content-between align-items-center">
+                                    <h3 className="mb-0">Transfers</h3>
+                                    <div className="d-flex justify-content-between align-items-center flex-wrap">
                                     <div className="me-2">Total Account to Wallet: <span className="text-primary">{totalTra && ` $${totalTra.accountToWallet.amount.toFixed(2)}  (${totalTra.accountToWallet.count}) `}</span></div>
                                     <div>Total Wallet to Account: <span className="text-primary">{totalTra && ` $${totalTra.walletToAccount.amount.toFixed(2)}  (${totalTra.walletToAccount.count}) `}</span></div>
                                 </div>
                                 {/* <Link to='#' className="link-text" onClick={() => props.setShowList('transfer')}>Show more</Link> */}
                             </div>}
-                            {(props.showList === 'transfer' || props.showList === "transferRequest") && 
+                            {(props.showList === 'transfer' || props.showList === "transferRequest") &&
                                 <>
                                 {location.pathname === "/mywallet" &&
                                     <>
-                                    <div className="d-flex justify-content-between align-items-center flex-wrap">
-                                        <h3 className="mb-0 d-flex flex-wrap justify-content-between" style={{ alignItems: 'center' }}>
-                                            <OverlayTrigger placement="top" overlay={<Tooltip>Back To Wallet</Tooltip>}>
-                                                <Link to="#" onClick={() => props.setShowList('all')} className="back-arrow mr-1">
-                                                    <BackArrowIcon width="24" height="24" />
-                                                </Link>
-                                            </OverlayTrigger>
-                                            <div className="mx-2">Transfers</div>
-                                        </h3>
-                                        <div className="d-flex flex-wrap justify-content-between align-items-center">
-                                            <div className="me-2">Total Account to Wallet: <span className="text-primary">{totalTra && ` $${totalTra.accountToWallet.amount.toFixed(2)}  (${totalTra.accountToWallet.count}) `}</span>
-                                            </div>
-                                            <div>Total Wallet to Account: <span className="text-primary">{totalTra && ` $${totalTra.walletToAccount.amount.toFixed(2)}  (${totalTra.walletToAccount.count}) `}</span>
+                                        <div className="d-flex justify-content-between align-items-center flex-wrap">
+                                            <h3 className="mb-0 d-flex flex-wrap justify-content-between" style={{ alignItems: 'center' }}>
+                                                <OverlayTrigger placement="top" overlay={<Tooltip>Back To Wallet</Tooltip>}>
+                                                    <Link to="#" onClick={() => props.setShowList('all')} className="back-arrow mr-1">
+                                                        <BackArrowIcon width="24" height="24" />
+                                                    </Link>
+                                                </OverlayTrigger>
+                                                <div className="mx-2">Transfers</div>
+                                            </h3>
+                                            <div className="d-flex flex-wrap justify-content-between align-items-center">
+                                                <div className="me-2">Total Account to Wallet: <span className="text-primary">{totalTra && ` $${totalTra.accountToWallet.amount.toFixed(2)}  (${totalTra.accountToWallet.count}) `}</span>
+                                                </div>
+                                                <div>Total Wallet to Account: <span className="text-primary">{totalTra && ` $${totalTra.walletToAccount.amount.toFixed(2)}  (${totalTra.walletToAccount.count}) `}</span>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <hr />
+                                        <hr />
                                     </>
                                 }
                                 <DurationFilter filterData={filterData} search={searchByDate} clear={clearDate} handleFilterDataChanger={handleFilterDataChanger} handleDurationChanger={handleDurationChanger} csvdata={csvdata} csvName={location.state?.client_name ? location.state?.client_name.replace(/ /g, "_") + "_transfer" : "transfers"} />
-                                <div className='d-flex flex-wrap'>
-                                    <small className="text-danger m-1">{error['from_date']}</small>
-                                    <small className="text-danger m-1">{error['to_date']}</small>
-                                </div>
-                            </>
+                                    <div className='d-flex flex-wrap'>
+                                        <small className="text-danger m-1">{error['from_date']}</small>
+                                        <small className="text-danger m-1">{error['to_date']}</small>
+                                    </div>
+                                </>
                             }
                             <div className="table-responsive">
-                        <Table className="table m-0 align-middle">
-                            <thead>
-                                <tr>
-                                    <th scope="col" >Record ID</th>
-                                            {<th scope="col">Transaction ID</th>}
-                                    <th scope="col">Type</th>
-                                    <th scope="col">Account</th>
-                                    {/* <th scope="col">Destination</th> */}
-                                    <th scope="col">Amount</th>
-                                    <th scope="col">Status</th>
+                                <Table className="table m-0 align-middle">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" >Record ID</th>
+                                            <th scope="col">Transaction ID</th>
+                                            <th scope="col">Type</th>
+                                            <th scope="col">Account</th>
+                                            {/* <th scope="col">Destination</th> */}
+                                            <th scope="col">Amount</th>
+                                            <th scope="col">Status</th>
                                             {/* <th scope="col">Comment</th> */}
-                                    <th scope="col">Date</th>
-                                    {/* <th scope="col">Proof</th> */}
+                                            <th scope="col">Date</th>
+                                            {/* <th scope="col">Proof</th> */}
                                             {/* <th scope="col">Action</th> */}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {Array.isArray(currentRecords) && currentRecords.length <= 0 && <tr><td colSpan="8">No records found</td></tr>}
-                                {Array.isArray(currentRecords) && currentRecords.map((transfer, i) =>
-                                    <tr>
-                                        <th scope="row">{transfer.id}</th>
-                                        {<td>{transfer.transaction_id}</td>}
-                                        <td>{transfer.type}</td>
-                                        <td>{transfer.account}</td>
-                                        {/* <td>{transfer.destination}</td> */}
-                                        <td>${transfer.amount}</td>
-                                        <td>{transfer.status === 'rejected' ? <div className="text-danger">{transfer.status}</div> : transfer.status}</td>
-                                        {/* <td>{transfer.comment}</td> */}
-                                        {/* <td><a href={null} >{transfer.proof_transfer == '-' ? '-' : <img src={transfer.proof_transfer} height='50px' width='50px'></img>}</a></td> */}
-                                        <td>{transfer.created_at}</td>
-                                        {/* <td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {Array.isArray(currentRecords) && currentRecords.length <= 0 && <tr><td colSpan="8">No records found</td></tr>}
+                                        {Array.isArray(currentRecords) && currentRecords.map((transfer, i) =>
+                                            <tr>
+                                                <th scope="row">{transfer.id}</th>
+                                                <td>{transfer.transaction_id}</td>
+                                            <td>{transfer.type}</td>
+                                            <td>{transfer.account}</td>
+                                            {/* <td>{transfer.destination}</td> */}
+                                            <td>${transfer.amount}</td>
+                                            <td>{transfer.status === 'rejected' ? <div className="text-danger">{transfer.status}</div> : transfer.status}</td>
+                                            {/* <td>{transfer.comment}</td> */}
+                                            {/* <td><a href={null} >{transfer.proof_transfer == '-' ? '-' : <img src={transfer.proof_transfer} height='50px' width='50px'></img>}</a></td> */}
+                                            <td>{transfer.created_at}</td>
+                                            {/* <td>
                                     {
                                         transfer.status == 'Pending' ?
                                             <a href={null} onClick={(e) => deleteRequest(e, transfer.id)} className="delete-icon" role='button'>
@@ -297,23 +297,23 @@ const Transfertable = (props) => {
                                             </a> : null
                                     }
                                 </td> */}
-                                    </tr>
-                                )}
-                            </tbody>
-                        </Table>
-                        {
+                                        </tr>
+                                    )}
+                                    </tbody>
+                                </Table>
+                                {
                                     props.showList === 'transfer' && transferData != null && transferData.length > TBL_SHOW_RECORDS ?
-                            <Pagination
-                                nPages={nPages}
-                                currentPage={currentPage}
-                                setCurrentPage={setCurrentPage}
-                                maxPageLimit={maxPageNumberLimit}
-                                minPageLimit={minPageNumberLimit}
-                                perPageLimit={pageNumberLimit}
-                                setMaxPageNumberLimit={setMaxPageNumberLimit}
-                                setMinPageNumberLimit={setMinPageNumberLimit}
-                            /> : null
-                        }
+                                        <Pagination
+                                            nPages={nPages}
+                                            currentPage={currentPage}
+                                            setCurrentPage={setCurrentPage}
+                                            maxPageLimit={maxPageNumberLimit}
+                                            minPageLimit={minPageNumberLimit}
+                                            perPageLimit={pageNumberLimit}
+                                            setMaxPageNumberLimit={setMaxPageNumberLimit}
+                                            setMinPageNumberLimit={setMinPageNumberLimit}
+                                        /> : null
+                                }
                             </div>
                             {
                                 props.showList === 'all' &&

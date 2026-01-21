@@ -3,15 +3,15 @@ import { Button, FormControl, FormGroup } from "react-bootstrap";
 import { Link, useHistory } from "react-router-dom";
 import { redirectAsync, showClient } from "../../store/clientslice";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
+// import axios from "axios";
 import AlertMessage from "../AlertMessage";
 import { PropagateLoader } from "react-spinners";
 import Select from 'react-select';
-import { BackArrowIcon } from "../../Components/icons";
+import { CustomRequest } from "../../Components/RequestService";
 
-const base_url = process.env.REACT_APP_API_URL;
-const STORE_WITHDRAW_API = base_url + "/v1/client/send-ibwithdrawrequest";
-const CREATE_WITHDRAW_API = base_url + "/v1/client/withdraw-paymentmethods";
+// const base_url = process.env.REACT_APP_API_URL;
+// const STORE_WITHDRAW_API = base_url + "/v1/client/send-ibwithdrawrequest";
+// const CREATE_WITHDRAW_API = base_url + "/v1/client/withdraw-paymentmethods";
 // const GET_CHARGE_API = base_url + "/v1/client/charge-paymentmethods";
 
 const IbComWithdrawRequest = ({ checkHistory, backHandler }) => {
@@ -45,48 +45,32 @@ const IbComWithdrawRequest = ({ checkHistory, backHandler }) => {
         // const { amount } = event.target.elements;
         // const data = { amount: amount.value };
 
-        try {
-            const config = {
-                headers: { Authorization: `Bearer ${client.token}` }
-            };
+        let formData = new FormData(event.target);
+        formData.append("as_ib", true);
+        formData.append("as_ib_withdraw", true);
 
-            let formData = new FormData(event.target);
-            // formData.append("amount", data.amount);
-            // //formData.append("client_payment_id", data.client_payment_id);
-            // //formData.append("gateway_type", gatewayType);
-            formData.append("as_ib", true);
-            formData.append("as_ib_withdraw", true);
-            console.log(Object.fromEntries(formData.entries()))
-            // if (client.client.ib_status == true) {
-            //     formData.append("as_ib", true);
-            // }
-
-            await axios.post(STORE_WITHDRAW_API, formData, config).then(response => {
-                if (response.data.status_code === 200) {
+        CustomRequest('send-ibwithdrawrequest', formData, client.token, (res) => {
+            if (res?.error) {
+                console.log(res.error);
+                let err = res?.error?.response?.data?.errors;
+                setLoading(false);
+                setError(err)
+                if (res?.error?.response.status === 401) {
+                    dispatch(redirectAsync());
+                }
+            } else {
+                if (res.data.status_code === 200) {
                     setLoading(false);
                     backFunction(event);
                 }
-                else if (response.data.status_code === 500) {
-                    setErrorMesssage(response.data.message);
+                else if (res.data.status_code === 500) {
+                    setErrorMesssage(res.data.message);
                     setAlertDiv(true);
                 }
                 setLoading(false);
                 setError({});
-            }).catch((error) => {
-                if (error.response) {
-                    console.log(error);
-                    let err = error.response.data.errors;
-                    setLoading(false);
-                    setError(err);
-                }
-            });
-        } catch (error) {
-            console.error(error);
-            if (error.response.status === 401) {
-                dispatch(redirectAsync());
-                setLoading(false);
             }
-        }
+        });
 
     };
 
@@ -98,55 +82,46 @@ const IbComWithdrawRequest = ({ checkHistory, backHandler }) => {
     async function fetchData() {
         setLoading(true);
 
-        try {
-            const config = {
-                headers: { Authorization: `Bearer ${client.token}` }
-            };
+        const data = {
+            value: ''
+        };
 
-            const data = {
-                value: ''
-            };
-
-
-            await axios.post(CREATE_WITHDRAW_API, data, config).then(response => {
-                if (response.data.status_code === 200) {
+        CustomRequest('withdraw-paymentmethods', data, client.token, (res) => {
+            if (res?.error) {
+                console.log(res.error);
+                let err = res?.error?.response?.data?.errors;
+                setLoading(false);
+                setError(err)
+                if (res?.error?.response.status === 401) {
+                    dispatch(redirectAsync());
+                }
+            } else {
+                if (res.data.status_code === 200) {
 
                     let optionData;
                     if (client.client.ib_status === 'both') {
-                        optionData = Object.entries(response.data.data.payment_methods).map(([status, methods]) => ({
+                        optionData = Object.entries(res.data.data.payment_methods).map(([status, methods]) => ({
                             label: status === 'approve' ? 'Used Payment Methods' : 'Other Payment Methods',
                             options: methods.map(({ id, name }) => ({ value: id, label: name }))
                         }));
 
                     } else {
-                        optionData = response.data.data.payment_methods.pending.map(item => ({
+                        optionData = res.data.data.payment_methods.pending.map(item => ({
                             value: item.id,
                             label: item.name
                         }));
                     }
                     setPaymentMethod(optionData);
-                    setBalance(response.data.data.withdrawable_amount);
+                    setBalance(res.data.data.withdrawable_amount);
                 }
-                else if (response.data.status_code === 500) {
-                    setErrorMesssage(response.data.message);
+                else if (res.data.status_code === 500) {
+                    setErrorMesssage(res.data.message);
                     setAlertDiv(true);
                 }
                 setLoading(false);
-            }).catch((error) => {
-                if (error.response) {
-                    console.log(error);
-                    let err = error.response.data.errors;
-                    setError(err);
-                    setLoading(false);
-                }
-            });
-        } catch (error) {
-            console.error(error);
-            if (error.response.status === 401) {
-                setLoading(false);
-                dispatch(redirectAsync());
             }
-        }
+        });
+
     }
 
     function handlePaymentMethordChange(e) {
@@ -175,7 +150,10 @@ const IbComWithdrawRequest = ({ checkHistory, backHandler }) => {
                             <h2 className="mb-0 px-40 d-flex flex-wrap align-items-center justify-content-between">
                                 <span>
                                     <Link to='#' onClick={(e) => backFunction(e)} className="back-arrow">
-                                        <BackArrowIcon width="24" height="24" />
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M9.56945 18.82C9.37945 18.82 9.18945 18.75 9.03945 18.6L2.96945 12.53C2.67945 12.24 2.67945 11.76 2.96945 11.47L9.03945 5.4C9.32945 5.11 9.80945 5.11 10.0995 5.4C10.3895 5.69 10.3895 6.17 10.0995 6.46L4.55945 12L10.0995 17.54C10.3895 17.83 10.3895 18.31 10.0995 18.6C9.95945 18.75 9.75945 18.82 9.56945 18.82Z" fill="#0B0B16" />
+                                            <path d="M20.4999 12.75H3.66992C3.25992 12.75 2.91992 12.41 2.91992 12C2.91992 11.59 3.25992 11.25 3.66992 11.25H20.4999C20.9099 11.25 21.2499 11.59 21.2499 12C21.2499 12.41 20.9099 12.75 20.4999 12.75Z" fill="#0B0B16" />
+                                        </svg>
                                     </Link>
                                     Commission Request
                                 </span>

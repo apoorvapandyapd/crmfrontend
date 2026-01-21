@@ -1,42 +1,34 @@
 import React, { useState } from 'react';
 import { useSelector } from "react-redux";
-import axios from 'axios';
-import { showClient } from '../../store/clientslice';
+import {showClient} from '../../store/clientslice';
 import Swal from 'sweetalert2';
 import { ClockIcone } from '../../Components/icons';
 
-const base_url = process.env.REACT_APP_API_URL;
-const TICKET_STATUS_API = base_url+"/v1/client/change-status";
-const TICKET_REVIEW_API = base_url+"/v1/client/ticket-review";
+import { CustomRequest } from '../../Components/RequestService';
 
 const TicketPriority = (props) => {
-    // const [priority,setPriority] = useState(props.priorityId);
-    const [status,setStatus] = useState(props.statusId);
+    const [priority, setPriority] = useState(props.priorityId);
+    const [status, setStatus] = useState(props.statusId);
     const client = useSelector(showClient);
 
     let rating = null;
 
-    const SubmitStatus = async(selected_val) => {
+    const SubmitStatus = async (selected_val) => {
         var selected_status = selected_val;
-        try {
-            const config = {
-                headers: { Authorization: `Bearer ${client.token}` }
-            };
-        
-            const bodyParameters = {
-                status: selected_status,
-                ticket_id: props.ticketId
-            };
-
-            const response = await axios.post(TICKET_STATUS_API, bodyParameters, config);
-
-            if (response.status === 200 && response.data.status_code === 200) {
-
+        const bodyParameters = {
+            status: selected_status,
+            ticket_id: props.ticketId
+        };
+        CustomRequest('change-status', bodyParameters, client.token, (res)=> {
+            if(res?.error) {
+                console.log(res.error);
+                if (res.error.response.status === 401) {
+                }
+            } else {
+                if (res.data.status_code === 200) {
+                }
             }
-        }catch (err) {
-            console.log(err);
-            throw new Error(err);
-        }
+        });
     }
 
     function reply(feel) {
@@ -46,14 +38,14 @@ const TicketPriority = (props) => {
             button.classList.remove('active');
         });
 
-        let buttonId = 'btn'+rating;
+        let buttonId = 'btn' + rating;
         document.getElementById(buttonId).classList.add('active');
     }
 
     async function ask(selected_val) {
         const wrap = document.createElement('div');
         wrap.className = 'text-muted';
-    
+
         const button1 = document.createElement('button');
         button1.className = 'emoji-btn';
         button1.id = 'btn1';
@@ -62,7 +54,7 @@ const TicketPriority = (props) => {
         img1.src = `${process.env.PUBLIC_URL}/Images/realrating-1.png`;
         button1.appendChild(img1);
         wrap.appendChild(button1);
-    
+
         const button2 = document.createElement('button');
         button2.className = 'emoji-btn';
         button2.id = 'btn2';
@@ -71,7 +63,7 @@ const TicketPriority = (props) => {
         img2.src = `${process.env.PUBLIC_URL}/Images/realrating-2.png`;
         button2.appendChild(img2);
         wrap.appendChild(button2);
-    
+
         const button3 = document.createElement('button');
         button3.className = 'emoji-btn';
         button3.id = 'btn3';
@@ -98,16 +90,16 @@ const TicketPriority = (props) => {
         img5.src = `${process.env.PUBLIC_URL}/Images/realrating-5.png`;
         button5.appendChild(img5);
         wrap.appendChild(button5);
-    
+
         const input = document.createElement('input');
         input.type = 'text';
         input.id = 'user_input';
         input.placeholder = 'Enter your feedback here';
         wrap.appendChild(input);
-    
+
         const hr = document.createElement('hr');
         wrap.appendChild(hr);
-    
+
         try {
             Swal.fire({
                 title: 'Please give your feedback',
@@ -118,55 +110,51 @@ const TicketPriority = (props) => {
                 confirmButtonText: 'Solved',
                 allowOutsideClick: false,
                 preConfirm: () => {
-                  const userFeedback = document.getElementById('user_input').value;
+                    const userFeedback = document.getElementById('user_input').value;
               
-                    if (!userFeedback.trim() || rating === null) {
-                    ask();
-                  } else {
-                    const config = {
-                      headers: { Authorization: `Bearer ${client.token}` },
-                    };
-              
-                    const bodyParameters = {
-                      feed_back: userFeedback,
-                      rating: rating,
-                      ticket_id: props.ticketId,
-                      status: selected_val,
-                    };
-              
-                    return axios.post(TICKET_REVIEW_API, bodyParameters, config)
-                      .then((response) => {
-                        if (response.status === 200 && response.data.status_code === 200) {
+                    if (!userFeedback.trim() || rating == null) {
+                        ask();
+                    } else {
+                    
+                        const bodyParameters = {
+                        feed_back: userFeedback,
+                        rating: rating,
+                        ticket_id: props.ticketId,
+                        status: selected_val,
+                        };
 
-                        }
-                        setStatus(selected_val);
-                        props.callFetchData();
-                      })
-                      .catch((error) => {
-                        console.error(error);
-                        throw new Error(error);
-                      });
-                  }
+                        CustomRequest('ticket-review', bodyParameters, client.token, (res)=> {
+                            if(res?.error) {
+                                console.log(res.error);
+                                if (res.error.response.status === 401) {
+                                }
+                            } else {
+                                if (res.data.status_code === 200) {
+                                    setStatus(selected_val);
+                                    props.callFetchData();
+                                }
+                            }
+                        });
+                    }
                 },
-              }).then((result) => {
+            }).then((result) => {
                 // Handle modal close event if needed
                 if (result.dismiss === Swal.DismissReason.cancel) {
-                  setStatus('1');
+                    setStatus('1');
                 }
-              });
+            });
         } catch (err) {
-            console.log(err);
+
             throw new Error(err);
         }
     }
 
-    const handleInput = (e) =>{
+    const handleInput = (e) => {
         setStatus(e.target.value);
 
         if (parseInt(e.target.value) !== 1) {
             ask(e.target.value);
-        }
-        else{
+        } else {
             SubmitStatus(e.target.value);
         }
     }
@@ -177,15 +165,17 @@ const TicketPriority = (props) => {
 
     return (
         <div className="ms-auto d-flex align-items-center flex-wrap">
-            <div className="date"> <ClockIcone width="20" height="20" />
+            <div className="date">
+
+                <ClockIcone width="20" height="20" />
                 <span>{props.ticketCreated}</span>
             </div>
             <div className="d-flex">
-                <div className="status d-flex align-items-center ms-auto">
+                <div className="status d-flex align-items-center ms-auto" key={props.ticketId}>
                     Priority
                     {
                         props.data.map(value =>
-                            (value.id === props.priorityId) ? <span>{value.priority}</span> : null
+                            (value.id === props.priorityId) ? <span key={value.id}>{value.priority}</span> : null
                         )
                     }
                 </div>
@@ -193,8 +183,8 @@ const TicketPriority = (props) => {
                     Status
                     <select className="form-control select low" onChange={handleInput} value={status} disabled={status === 2}>
                         {
-                            props.ticketStatus.map(value=>(
-                                <option value={value.id}>{value.name}</option>
+                            props.ticketStatus.map(value => (
+                                <option value={value.id} key={value.id}>{value.name}</option>
                             ))
                         }
                     </select>

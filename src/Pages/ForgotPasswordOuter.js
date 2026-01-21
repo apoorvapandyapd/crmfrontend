@@ -7,11 +7,12 @@ import Form from 'react-bootstrap/Form';
 import { useHistory, useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { showClient } from "../store/clientslice";
-import { useSelector, useDispatch } from "react-redux";
-import axios from 'axios';
+import { useSelector } from "react-redux";
+// import axios from 'axios';
 import { Alert } from "react-bootstrap";
-const base_url = process.env.REACT_APP_API_URL;
-const FORGOT_PASSWORD_API = base_url+"/reset-password-outer";
+import { CustomRequest } from "../Components/RequestService";
+// const base_url = process.env.REACT_APP_API_URL;
+// const FORGOT_PASSWORD_API = base_url+"/reset-password-outer";
 
 const ForgotPasswordOuter = (props) => {
 
@@ -19,15 +20,14 @@ const ForgotPasswordOuter = (props) => {
 
     const history = useHistory();
     const client = useSelector(showClient);
-    const dispatch = useDispatch();
-    const [captchastate, setcaptchastate] = useState(false);
+    // const dispatch = useDispatch();
+    // const [captchastate, setcaptchastate] = useState(false);
     const [value, setValue] = useState({
         password:'',
         confirm_password:''
     });
     const [error, setError] = useState({});
     const [errorOuter, setErrorOuter] = useState(null);
-
 
     useEffect(() => {
         if (client.iserror === true) {
@@ -37,9 +37,6 @@ const ForgotPasswordOuter = (props) => {
         // redirect user to verify page
         if (client.islogin === true && client.alreadyLogin === false)
             history.push('/verify')
-        // redirect authenticated user to dashboard screen
-        // if (client.islogin === true && client.isverify === true)
-        //     history.push('/dashboard')
     }, [history, client])
 
     const handleInput = (e) => {
@@ -52,35 +49,26 @@ const ForgotPasswordOuter = (props) => {
     const resetPasswordSubmit = async(event) => {
         event.preventDefault();
        
-        let formData = new FormData();
-        formData.append("token",token);
-        formData.append("password",value.password);
-        formData.append("confirm_password",value.confirm_password);
+        let data = {
+            "token": token,
+            "password": value.password,
+            "confirm_password": value.confirm_password
+        }
 
-        try {
-            const config = {
-                headers: { Authorization: `Bearer ${client.token}` }
-            };
-
-            await axios.post(FORGOT_PASSWORD_API, formData, config).then((res)=>{
-                if(res.data.status_code===200){
-
+        CustomRequest('reset-password-outer', data, (res) => {
+            if (res?.error) {
+                console.log(res.error);
+                setError(res?.error.response?.data.errors);
+            } else {
+                if (res.data.status_code === 200) {
                     history.push('/login')
                 }
-                else if(res.data.status_code==500){
+                else if (res.data.status_code === 500) {
                     setErrorOuter(res.data.message);
                 }
-            }).catch((error) => {
-                if (error.response) {
-                    console.log(error.response.data.errors);
-                    setError(error.response.data.errors);
-                }
-            });
-        } catch (error) {
-            console.error(error);
-            setError(error);
-        }
-    };
+            }
+        });
+    }; 
 
     return (
         <Fragment>

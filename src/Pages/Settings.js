@@ -8,23 +8,20 @@ import { showClient, updateClientDataAsync, updateClientAsync } from "../store/c
 import { useDispatch, useSelector } from "react-redux";
 import PropagateLoader from "react-spinners/PropagateLoader";
 import Select from 'react-select';
-
 import PhoneInput from "react-phone-input-2";
 import { DeleteIcon } from "../Components/icons";
-// const base_url = process.env.REACT_APP_API_URL;
-// const CLIENT_UPDATE_API = base_url + "/v1/client/update-profile";
+const base_url = process.env.REACT_APP_API_URL;
+const CLIENT_UPDATE_API = base_url + "/v1/client/update-profile";
 
 
 const Settings = () => {
 
     const client = useSelector(showClient);
-
-    // const noimg = process.env.PUBLIC_URL + "/Images/profile-photo.png";
+    const noimg = process.env.PUBLIC_URL + "/Images/profile-photo.png";
 
     const history = useHistory();
     if (client.islogin === false)
     {
-
         history.push('/login')
     }
     const dispatch = useDispatch();
@@ -76,7 +73,8 @@ const Settings = () => {
     },[client])
 
     useEffect(() => {
-        let selectCountr = countries.find(country => country.label === client.client.country);
+        let selectCountr = countries.find(country => country.label == client.client.country);
+
         setSelectedCountry(selectCountr);
 
         setTimeout(() => {
@@ -131,7 +129,7 @@ const Settings = () => {
 
         let updatedObject;
 
-        if (selectedCountry != null) {
+        if(selectedCountry!==null){
             updatedObject = {
                 ...value,
                 country: selectedCountry.label,
@@ -148,7 +146,7 @@ const Settings = () => {
     }; 
     
     const countryChange = (e, attrib) => {
-        // const inputName = attrib.name;
+        const inputName = attrib.name;
 
         setSelectedCountry({ value: e.value, label: e.label, format: e.format });
     }
@@ -184,6 +182,7 @@ const Settings = () => {
                                         <Button className="delete-icon" onClick={deleteProfilePhoto}>
                                                     <DeleteIcon width="18" height="18" />
                                             </Button>
+                                        }
                                         <Image className="profile-thumb" src={(imgPreview!=null) ? imgPreview : `${process.env.PUBLIC_URL}/Images/no-image.png`} alt="profile photo" width='100%' />
                                     </div>
                                 </form>
@@ -194,14 +193,14 @@ const Settings = () => {
                                         <input type="file" name="" onChange={handleProfilePhoto} />
                                         {
                                                     (submitText === 'Save') ? 
-                                                        <button type="submit" className="btn btn-primary btn-sm">Change Photo</button> :
-                                                        <button type="button" className="btn btn-primary btn-sm">{submitText}</button>
+                                            <button type="submit" className="btn btn-primary btn-sm">Change Photo</button> : 
+                                            <button type="button" className="btn btn-primary btn-sm">{submitText}</button>
                                         }
                                     </div>
                                     <div className="form-group">
                                     {
                                                     (submitText === 'Save') ? 
-                                                        <button type="submit" className="btn btn-primary btn-sm mt-2">{submitText}</button> : null 
+                                        <button type="submit" className="btn btn-primary btn-sm mt-2">{submitText}</button> : null 
                                     }
                                     </div>
                                 </form>
@@ -240,7 +239,7 @@ const Settings = () => {
                                     </Row>
                                     <Form.Group className="mb-3">
                                         <FormLabel>Address</FormLabel>
-                                        <Form.Control as="textarea" Rows={2} name="address_1" placeholder="Address" value={value.address_1} onChange={handleInput} />
+                                        <Form.Control as="textarea" rows={2} name="address_1" placeholder="Address" value={value.address_1} onChange={handleInput} />
                                                 <small className="text-danger">{(client.hasOwnProperty('multiMessage') && client.multiMessage !== undefined) ? client.multiMessage.address_1 : null}</small>
                                     </Form.Group>
                                     <Form.Group className="mb-3">
@@ -266,7 +265,7 @@ const Settings = () => {
                                             <Form.Group className="mb-3">
                                                 <FormLabel>Gender</FormLabel>
                                                 <Form.Select value={value.gender} name="gender" className="custom-select" onChange={handleInput} >
-                                                    <option value="" selected>Select an option</option>
+                                                    <option value="" >Select an option</option>
                                                     <option value="Male">Male</option>
                                                     <option value="Female">Female</option>
                                                 </Form.Select>

@@ -1,4 +1,4 @@
-import axios from 'axios';
+// import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { PropagateLoader } from 'react-spinners';
 import {redirectAsync, showClient} from '../../store/clientslice';
@@ -7,9 +7,10 @@ import { formatNumberWithCommas, getUniqueList } from '../../Components/util';
 import { Link } from 'react-router-dom';
 import { CsvDownloadIcon, RefatchIcon } from '../../Components/icons';
 import { CSVLink } from "react-csv";
+import { CustomRequest } from '../../Components/RequestService';
 
 let allIbAccounts = [];
-const DASHBOARD_API_URL = process.env.REACT_APP_API_URL + "/v1/ib/getallibaccounts";
+// const DASHBOARD_API_URL = process.env.REACT_APP_API_URL + "/v1/ib/getallibaccounts";
 
 function IbAllClientAccount() {
     const dispatch = useDispatch();
@@ -24,35 +25,25 @@ function IbAllClientAccount() {
     const client = useSelector(showClient);
     async function fetchAllAccounts() {
         setIbAccounts(null);
-        try {
-            const config = {
-                headers: {Authorization: `Bearer ${client.token}`}
-            };
 
-            const bodyParameters = {
-                key: "value"
-            };
-            await axios.post(DASHBOARD_API_URL, bodyParameters, config).then((res) => {
+        let data = {
+            key: "value"
+        };
+        CustomRequest('getallibaccounts', data, client.token, (res) => {
+            if (res?.error) {
+                if (res.error.response.status === 401) {
+                    dispatch(redirectAsync());
+                }
+            } else {
                 if (res.data.status_code === 200) {
                     allIbAccounts = res.data.data.accounts;
                     setIbAccounts(res.data.data.accounts);
                     let cArr = getUniqueList(allIbAccounts);
                     setClientsArr(cArr);
-                    setFilter({search:'', selclient:''});
-                } else if (res.data.status_code === 500) {
-
+                    setFilter({ search: '', selclient: '' });
                 }
-            }).catch((error) => {
-                if (error.response) {
-
-                }
-            });
-        } catch (error) {
-            
-            if (error.response.status === 401) {
-                dispatch(redirectAsync());
             }
-        }
+        });
     }
 
     const clientChangeHandler = (e) => {

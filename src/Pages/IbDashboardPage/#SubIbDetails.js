@@ -4,8 +4,6 @@ import { Link } from 'react-router-dom';
 function SubIbDetails(props) {
 
     const ibData = props.data.data.sub_ibs.data;
-    const clientLevel = props.data.data.level;
-    var content = Array.from({length: clientLevel}, (_, i) => i + 1);
 
     return (
         <>

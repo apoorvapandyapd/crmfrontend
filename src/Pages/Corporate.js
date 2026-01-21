@@ -15,7 +15,7 @@ const Corporate = () => {
         history.push('/accountverification');
     } else if (client.client.form_type != null && client.client.form_type === 0) {
         history.push('/individualdetails');
-    } 
+    }
 
     return (
         <Fragment>
@@ -23,7 +23,7 @@ const Corporate = () => {
                 <div className="box-wrapper w-100 application-from">
                     <div className="card-body p-0">
                         <div className="d-flex flex-wrap justify-content-between">
-                            
+
                             <Tabcontent  />
                         </div>
                     </div>

@@ -123,7 +123,7 @@ function Employment({setActiveTab, backEvent, activeTab}) {
                     setData(updatedData); // Update the state
                     setError({});
 
-                    if(res.data.data=='completed'){
+                    if(res.data.data==='completed'){
                         setTimeout(()=>{
                             setLoading(false);
                             history.push('/create/live/account')
@@ -133,7 +133,7 @@ function Employment({setActiveTab, backEvent, activeTab}) {
                         setActiveTab(res.data.data);
                     }
                 }
-                else if(res.data.status_code==500){
+                else if(res.data.status_code===500){
                 }
             }).catch((error) => {
                 if (error.response) {
@@ -169,14 +169,14 @@ function Employment({setActiveTab, backEvent, activeTab}) {
         } catch (error) {
             console.error(error);
             setLoading(false);
-            if(error.response.status==401){
+            if(error.response.status===401){
                 dispatch(redirectAsync());
             }
         }
     }
 
     useEffect(() => {
-        if(activeTab=='emp_key'){
+        if(activeTab==='emp_key'){
             fetchData();
         }    
     }, [activeTab]);
@@ -209,16 +209,16 @@ function Employment({setActiveTab, backEvent, activeTab}) {
                         <div className="form-group">
                             <label>Employment Status*</label>
                             <div className="form-group mt-2 custom_radio">
-                                <input type="radio" id="employed" name="emp_status" onChange={individualChange} value='Employed' checked={data.emp_status=="Employed"}/>
-                                <label for="employed">Employed</label>
-                                <input type="radio" id="self-employed" name="emp_status" onChange={individualChange} value='Self-Employed' checked={data.emp_status=="Self-Employed"}/>
-                                <label for="self-employed">Self-Employed</label>
-                                <input type="radio" id="unemployed" name="emp_status" onChange={individualChange} value='Unemployed' checked={data.emp_status=="Unemployed"}/>
-                                <label for="unemployed">Unemployed</label>
-                                <input type="radio" id="retired" name="emp_status" onChange={individualChange} value='Retired' checked={data.emp_status=="Retired"}/>
-                                <label for="retired">Retired</label>
-                                <input type="radio" id="student" name="emp_status" onChange={individualChange} value='Student' checked={data.emp_status=="Student"}/>
-                                <label for="student">Student</label>
+                                <input type="radio" id="employed" name="emp_status" onChange={individualChange} value='Employed' checked={data.emp_status==="Employed"}/>
+                                <label htmlFor="employed">Employed</label>
+                                <input type="radio" id="self-employed" name="emp_status" onChange={individualChange} value='Self-Employed' checked={data.emp_status==="Self-Employed"}/>
+                                <label htmlFor="self-employed">Self-Employed</label>
+                                <input type="radio" id="unemployed" name="emp_status" onChange={individualChange} value='Unemployed' checked={data.emp_status==="Unemployed"}/>
+                                <label htmlFor="unemployed">Unemployed</label>
+                                <input type="radio" id="retired" name="emp_status" onChange={individualChange} value='Retired' checked={data.emp_status==="Retired"}/>
+                                <label htmlFor="retired">Retired</label>
+                                <input type="radio" id="student" name="emp_status" onChange={individualChange} value='Student' checked={data.emp_status==="Student"}/>
+                                <label htmlFor="student">Student</label>
                             </div>
                         </div>
                         <small className="text-danger">{error.emp_status}</small>
@@ -255,16 +255,16 @@ function Employment({setActiveTab, backEvent, activeTab}) {
                         <div className="form-group">
                             <label>Is your employer (or Company) regulated by FSC or any other regulator in financial markets*?</label>
                             <div className="form-group mt-2 custom_radio">
-                                <input type="radio" id="employer-yes" value='Yes'  name="company_by_fsc" onChange={individualChange} checked={data.company_by_fsc=="Yes"}/>
-                                <label for="employer-yes" >Yes</label>
-                                <input type="radio" id="employer-no" value='No'  name="company_by_fsc" onChange={individualChange} checked={data.company_by_fsc=="No"}/>
-                                <label for="employer-no">No</label>
+                                <input type="radio" id="employer-yes" value='Yes'  name="company_by_fsc" onChange={individualChange} checked={data.company_by_fsc==="Yes"}/>
+                                <label htmlFor="employer-yes" >Yes</label>
+                                <input type="radio" id="employer-no" value='No'  name="company_by_fsc" onChange={individualChange} checked={data.company_by_fsc==="No"}/>
+                                <label htmlFor="employer-no">No</label>
                             </div>
                         </div>
                         <small className="text-danger">{error.company_by_fsc}</small>
                     </div>
                     {
-                        data.company_by_fsc=="Yes" && 
+                        data.company_by_fsc==="Yes" && 
                         <div className="col-12 mb-3">
                             <div className="form-group">
                                 <label>If Yes, Please provide details</label>
@@ -332,20 +332,20 @@ function Employment({setActiveTab, backEvent, activeTab}) {
                         <div className="form-group">
                             <label>Investment Objective?*</label>
                             <div className="form-group mt-2 custom_radio">
-                                <input type="radio" id="hedging" name="investment_objective" onChange={individualChange} value='Hedging' checked={data.investment_objective=="Hedging"}/>
-                                <label for="hedging">Hedging</label>
-                                <input type="radio" id="trading" name="investment_objective" onChange={individualChange} value='Trading' checked={data.investment_objective=="Trading"}/>
-                                <label for="trading">Trading</label>
-                                <input type="radio" id="investment" name="investment_objective" onChange={individualChange} value='Investment' checked={data.investment_objective=="Investment"}/>
-                                <label for="investment">Investment</label>
-                                <input type="radio" id="other" name="investment_objective" onChange={individualChange} value='Others' checked={data.investment_objective=="Others"}/>
-                                <label for="other">Others</label>
+                                <input type="radio" id="hedging" name="investment_objective" onChange={individualChange} value='Hedging' checked={data.investment_objective==="Hedging"}/>
+                                <label htmlFor="hedging">Hedging</label>
+                                <input type="radio" id="trading" name="investment_objective" onChange={individualChange} value='Trading' checked={data.investment_objective==="Trading"}/>
+                                <label htmlFor="trading">Trading</label>
+                                <input type="radio" id="investment" name="investment_objective" onChange={individualChange} value='Investment' checked={data.investment_objective==="Investment"}/>
+                                <label htmlFor="investment">Investment</label>
+                                <input type="radio" id="other" name="investment_objective" onChange={individualChange} value='Others' checked={data.investment_objective==="Others"}/>
+                                <label htmlFor="other">Others</label>
                             </div>
                         </div>
                         <small className="text-danger">{error.investment_objective}</small>
                     </div>
                     {
-                        data.investment_objective=='Others' && 
+                        data.investment_objective==='Others' && 
                         <div className="col-12 mb-3">
                             <div className="form-group">
                                 <label>Please provide details</label>
@@ -371,42 +371,42 @@ function Employment({setActiveTab, backEvent, activeTab}) {
                     <div className="col-12 mb-3">
                         <div className="form-group cd-label">
                             <input style={{ marginRight:'8px' }} type="checkbox" id="saving-salary" name='saving_from_salary' onChange={individualChange} checked={data.saving_from_salary} />
-                            <label className="mr-3" for="saving-salary"><b>Saving from Salary/Pension</b></label>
+                            <label className="mr-3" htmlFor="saving-salary"><b>Saving from Salary/Pension</b></label>
                             <small className="text-danger">{error.saving_from_salary}</small>
                         </div>
                     </div>
                     <div className="col-12 mb-3">
                         <div className="form-group cd-label">
                             <input style={{ marginRight:'8px' }} type="checkbox" id="p-entrepreneur" name='private_entrepreneur' onChange={individualChange} checked={data.private_entrepreneur} />
-                            <label className="mr-3" for="p-entrepreneur"><b>Private Entrepreneur</b></label>
+                            <label className="mr-3" htmlFor="p-entrepreneur"><b>Private Entrepreneur</b></label>
                             <small className="text-danger">{error.private_entrepreneur}</small>
                         </div>
                     </div>
                     <div className="col-12 mb-3">
                         <div className="form-group cd-label">
                             <input style={{ marginRight:'8px' }} type="checkbox" id="inheritance" name='inheritance' onChange={individualChange} checked={data.inheritance} />
-                            <label className="mr-3" for="inheritance"><b>Inheritance</b></label>
+                            <label className="mr-3" htmlFor="inheritance"><b>Inheritance</b></label>
                             <small className="text-danger">{error.inheritance}</small>
                         </div>
                     </div>
                     <div className="col-12 mb-3">
                         <div className="form-group cd-label">
                             <input style={{ marginRight:'8px' }} type="checkbox" id="investments" name='investments' onChange={individualChange} checked={data.investments} />
-                            <label className="mr-3" for="investments"><b>Investments</b></label>
+                            <label className="mr-3" htmlFor="investments"><b>Investments</b></label>
                             <small className="text-danger">{error.investments}</small>
                         </div>
                     </div>
                     <div className="col-12 mb-3">
                         <div className="form-group cd-label">
                             <input style={{ marginRight:'8px' }} type="checkbox" id="real-estate" name='real_estate' onChange={individualChange} checked={data.real_estate} />
-                            <label className="mr-3" for="real-estate"><b>Real Estate</b></label>
+                            <label className="mr-3" htmlFor="real-estate"><b>Real Estate</b></label>
                             <small className="text-danger">{error.real_estate}</small>
                         </div>
                     </div>
                     <div className="col-12 mb-3">
                         <div className="form-group cd-label">
                             <input style={{ marginRight:'8px' }} type="checkbox" id="royalties" name='royalties' onChange={individualChange} checked={data.royalties} />
-                            <label className="mr-3" for="royalties"><b>Royalties</b></label>
+                            <label className="mr-3" htmlFor="royalties"><b>Royalties</b></label>
                             <small className="text-danger">{error.royalties}</small>
                         </div>
                     </div>
@@ -414,16 +414,16 @@ function Employment({setActiveTab, backEvent, activeTab}) {
                         <div className="form-group">
                             <label>Others</label>
                             <div className="form-group mt-2 custom_radio">
-                                <input type="radio" id="others-yes" name="others" onChange={individualChange} value='Yes' checked={data.others=="Yes"}/>
-                                <label for="others-yes">Yes</label>
-                                <input type="radio" id="others-no" name="others" onChange={individualChange} value='No' checked={data.others=="No"}/>
-                                <label for="others-no">No</label>
+                                <input type="radio" id="others-yes" name="others" onChange={individualChange} value='Yes' checked={data.others==="Yes"}/>
+                                <label htmlFor="others-yes">Yes</label>
+                                <input type="radio" id="others-no" name="others" onChange={individualChange} value='No' checked={data.others==="No"}/>
+                                <label htmlFor="others-no">No</label>
                             </div>
                             <small className="text-danger">{error.others}</small>
                         </div>
                     </div>
                     {
-                        data.others=="Yes" && 
+                        data.others==="Yes" && 
                         <div className="col-12 mb-3">
                             <div className="form-group">
                                 <label>If Yes, Please provide details</label>

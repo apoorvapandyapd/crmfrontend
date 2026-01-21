@@ -193,7 +193,7 @@ function CreateDemo(props) {
                                             type.map(val=>(
                                                 (val.type=='demo') ? 
                                                 <><input type="radio" id={val.account} name='account' value={val.id} onChange={handleType} />
-                                                <label for={val.account}>PM Financials Demo</label></> : null
+                                                <label htmlFor={val.account}>PM Financials Demo</label></> : null
                                             ))
                                         }
                                         <br/><small className="text-danger">{error.account_type_id}</small>

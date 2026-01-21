@@ -5,7 +5,7 @@ function Home() {
     return (
         <Fragment>
             <Header />
-            <h1>Pmfinancials Home</h1>
+            <h1>CRM Home</h1>
             
         </Fragment>
     );

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <link rel="icon" type="image/x-icon" href="%PUBLIC_URL%/favicon.ico"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="theme-color" content="#000000"/>
+    <meta
+            name="description"
+            content="Web site created using create-react-app"
+    />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/favicon.ico"/>
+    <!--
+      manifest.json provides metadata used when your web app is installed on a
+      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json"/>
+    <!--
+      Notice the use of %PUBLIC_URL% in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
+
+      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+    <script type="text/javascript">
+        (function (l) {
+            if (l.search[1] === '/') {
+                var decoded = l.search.slice(1).split('&').map(function (s) {
+                    return s.replace(/~and~/g, '&')
+                }).join('?');
+                window.history.replaceState(null, null,
+                    l.pathname.slice(0, -1) + decoded + l.hash
+                );
+            }
+        }(window.location))
+    </script>
+    <title>CRM</title>
+</head>
+<body>
+<noscript>You need to enable JavaScript to run this app.</noscript>
+<div id="root"></div>
+<!--
+  This HTML file is a template.
+  If you open it directly in the browser, you will see an empty page.
+
+  You can add webfonts, meta tags, or analytics to this file.
+  The build step will place the bundled scripts into the <body> tag.
+
+      To begin the development, run `npm start` or `yarn start`.
+      To create a production bundle, use `npm run build` or `yarn build`.
+    -->
+  <script defer src="https://epay.me/v2sdk/directsdk.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.5.0/axios.min.js" integrity="sha512-aoTNnqZcT8B4AmeCFmiSnDlc4Nj/KPaZyB5G7JnOnUEkdNpCZs1LCankiYi01sLTyWy+m2P+W4XM+BuQ3Q4/Dg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script>
+      function merchantEpay(amt, customerId, merchantId, token, logo, orderId, gateway_id, EPAY_API, client, countryCode) {
+      var gatewayID = gateway_id;
+      var orderID = orderId;
+      var customerID = customerId;
+      var amounts = amt;
+      var EPAY_APIS = EPAY_API;
+
+        localStorage.setItem('amount', amounts);
+        localStorage.setItem('gateway_id', gatewayID);
+        localStorage.setItem('order_id', orderID);
+        localStorage.setItem('customer_id', customerID);
+
+
+        const options = {
+            showCancelButton: true,
+            channelId: "WEB",// "APP" or "WEB"
+            customerId: String(customerId),
+            merchantType: "ECOMMERCE", //CRYPTO or ECOMM
+            merchantId: String(merchantId),
+            orderID: String(orderId),
+            orderDescription: "",
+            orderAmount: amt,
+            mobilenumber: String(client.phone_no),
+            countrycode: String(countryCode),
+            email: String(client.email),
+            orderCurrency: "USD",
+            merchantLogo: String(logo),
+            showSavedCardsFeature: true, // type = boolean, default = true
+            successHandler: async function (response) {
+                // window.location.href = '/handleEpay?amount='+localStorage.getItem('amount')+'&gateway_id='+gatewayID+'&customer_id='+customerID;
+
+                // window.location.href = 'https://demooffice.parkmoneyfx.com/dashboard/getEpayCall';
+
+                // window.location.href = 'https://demooffice.parkmoneyfx.com/dashboard/getEpayCall?gateway_id='+gateway_id+'&order_id='+orderId+'&customer_id='+customerId+'&amount='+amt;
+
+              // window.location.href = 'http://localhost:8000/send-webhook';
+              // // Handle success response      
+              const config = {
+                headers: { Authorization: token }
+              };
+
+                const data = {
+                    gateway_id: gatewayID,
+                    orderId: orderID,
+                    customerId: customerID,
+                    amount: amounts,
+                };
+
+
+            await axios.post(EPAY_APIS, data, config).then(response => {
+
+                }).catch((error) => {
+                    if (error.response) {
+                        let err = error.response.data.errors;
+                    }
+                });
+
+                // window.location.href = '/deposit'
+            },
+            failedHandler: async function (response) {
+                // window.location.href = '/handleEpay?amount='+localStorage.getItem('amount')+'&gateway_id='+gatewayID+'&customer_id='+customerID;
+
+                // window.location.href = 'https://demooffice.parkmoneyfx.com/dashboard/getEpayCall';
+
+                // window.location.href = 'https://demooffice.parkmoneyfx.com/dashboard/getEpayCall?gateway_id='+gateway_id+'&order_id='+orderId+'&customer_id='+customerId+'&amount='+amt;
+                // window.location.href = '/deposit';
+
+                // Handle failure response
+                // window.location.href="http://localhost:8000/dashboard.php";
+                const config = {
+                    headers: {Authorization: token}
+                };
+
+                const data = {
+                    gateway_id: gatewayID,
+                    orderId: orderID,
+                    customerId: customerID,
+                    amount: amounts,
+                };
+
+
+            await axios.post(EPAY_APIS, data, config).then(response => {
+                  if(response.data.status_code === 200){
+                    window.location.href = '/deposit'
+                  }
+
+                }).catch((error) => {
+                    if (error.response) {
+                        let err = error.response.data.errors;
+                    }
+                });
+
+                // window.location.href = '/deposit'
+            }
+        };
+        const epay = new Epay(options);
+        epay.open(options);
+    }
+</script>
+</body>
+</html>

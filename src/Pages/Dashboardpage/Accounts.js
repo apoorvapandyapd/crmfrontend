@@ -60,7 +60,7 @@ const Accounts = (props) => {
             <h2>Account Details</h2>
             <ul className="c-tabs nav-tabs" id="myTab" role="tablist">
                 <li className="nav-item" role="presentation">
-                    <Link to="#" className={props.activetab === 'live' ? "active" : "btn"} id="live-tab" data-bs-toggle="tab" data-bs-target="#live-tab-pane" role="tab" aria-controls="live-tab-pane" aria-selected="false">Live</Link>
+                    <Link to="#" className={props.activetab === 'live' ? "active" : ""} id="live-tab" data-bs-toggle="tab" data-bs-target="#live-tab-pane" role="tab" aria-controls="live-tab-pane" aria-selected="false">Live</Link>
                 </li>
                 <li className="nav-item" role="presentation">
                     <Link to="#" className={props.activetab === 'demo' ? "active" : ""} id="demo-tab" data-bs-toggle="tab" data-bs-target="#demo-tab-pane" role="tab" aria-controls="demo-tab-pane" aria-selected="false">Demo</Link>
